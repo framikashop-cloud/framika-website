@@ -1,0 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+body { font-family: 'Inter', sans-serif; background-color: #f9fafb; }
+.active-tab { background-color: #f59e0b; color: #fff; }
+.inactive-tab { background-color: #fff; color: #4b5563; border: 1px solid #d1d5db; }
+.card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgb(0 0 0 / 10%), 0 8px 10px -6px rgb(0 0 0 / 10%); }
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #f1f1f1; }
+::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
