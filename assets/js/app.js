@@ -9,9 +9,41 @@ function getFilteredItems(items) {
   return items.filter((item) => currentFilter === 'all' || item.gender === currentFilter || item.gender === 'both');
 }
 
-function orderItem(itemName) {
-  const message = `Namaste! I saw your website and I like this one: *${itemName}*. How can we proceed with the details?`;
-  window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, '_blank', 'noopener');
+function openOrderForm(itemName) {
+  const modal = document.getElementById('order-form-modal');
+  const titleSpan = document.getElementById('modal-design-title');
+  const designInput = document.getElementById('selectedDesign');
+  
+  if (titleSpan) titleSpan.textContent = itemName;
+  if (designInput) designInput.value = itemName;
+
+  // Auto-select gender if title indicates gender
+  if (itemName.includes('NM-MR-B') || itemName.toLowerCase().includes('boy')) {
+    const boyRadio = document.getElementById('gender-boy');
+    if (boyRadio) boyRadio.checked = true;
+  } else if (itemName.includes('NM-MR-G') || itemName.toLowerCase().includes('girl')) {
+    const girlRadio = document.getElementById('gender-girl');
+    if (girlRadio) girlRadio.checked = true;
+  }
+
+  // Set minimum date for datetime-local to today
+  const dateTimeInput = document.getElementById('eventDateTime');
+  if (dateTimeInput) {
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    dateTimeInput.min = now.toISOString().slice(0, 16);
+  }
+
+  modal.classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeOrderForm() {
+  const modal = document.getElementById('order-form-modal');
+  if (modal) {
+    modal.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
 }
 
 function createProductCard(product, type) {
@@ -21,7 +53,7 @@ function createProductCard(product, type) {
   const ratio = type === 'video' ? 'aspect-[9/16]' : 'aspect-[3/4]';
   const safeTitle = escapeHtml(product.title);
   const safeDescription = escapeHtml(product.description);
-  const safeName = encodeURIComponent(product.whatsappName);
+  const safeName = escapeHtml(product.whatsappName);
   const media = type === 'video'
     ? `<button type="button" class="video-preview relative w-full ${ratio} bg-gray-200 group overflow-hidden cursor-pointer" data-video-url="${escapeHtml(product.directVideoUrl)}" aria-label="Play ${safeTitle}">
          <img src="${escapeHtml(product.thumbnailImage)}" alt="Marathi Baby ${product.gender === 'boy' ? 'Boy' : 'Girl'} Naamkaran Video Invitation Design ${safeTitle}" class="absolute inset-0 w-full h-full object-cover z-10 transition-opacity duration-300">
@@ -82,10 +114,12 @@ document.addEventListener('click', (event) => {
   const orderButton = event.target.closest('.order-button');
   const videoButton = event.target.closest('.video-preview');
   const imageButton = event.target.closest('.image-preview');
+
   if (tabButton) { currentTab = tabButton.dataset.tab; updateControls(); renderItems(); }
   if (filterButton) { currentFilter = filterButton.dataset.filter; updateControls(); renderItems(); }
-  if (orderButton) orderItem(decodeURIComponent(orderButton.dataset.itemName));
+  if (orderButton) openOrderForm(orderButton.dataset.itemName);
   if (imageButton) openImageModal(imageButton.dataset.imageUrl, imageButton.dataset.imageTitle);
+
   if (videoButton) {
     document.querySelectorAll('video').forEach((video) => video.pause());
     const video = document.createElement('video');
@@ -96,9 +130,57 @@ document.addEventListener('click', (event) => {
     video.className = 'absolute inset-0 w-full h-full object-cover z-30';
     videoButton.replaceWith(video);
   }
+
   if (event.target === document.getElementById('image-modal') || event.target.closest('#close-modal')) closeImageModal();
+  if (event.target === document.getElementById('order-form-modal') || event.target.closest('#close-order-modal')) closeOrderForm();
 });
 
-document.addEventListener('keydown', (event) => { if (event.key === 'Escape') closeImageModal(); });
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape') {
+    closeImageModal();
+    closeOrderForm();
+  }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('naming-form');
+  if (form) {
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const selectedDesign = document.getElementById('selectedDesign').value || 'Namkaran Invitation';
+      const motherName = "सौ. " + document.getElementById('motherName').value.trim();
+      const fatherName = "श्री " + document.getElementById('fatherName').value.trim();
+      const genderEl = document.querySelector('input[name="babyGender"]:checked');
+      const gender = genderEl ? genderEl.value : 'N/A';
+      const rawDateTime = document.getElementById('eventDateTime').value;
+      const venue = document.getElementById('venue').value.trim();
+      const inviter = document.getElementById('inviter').value.trim();
+
+      let formattedDateTime = rawDateTime;
+      if (rawDateTime) {
+        const eventDateObj = new Date(rawDateTime);
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+        formattedDateTime = eventDateObj.toLocaleString('en-US', options);
+      }
+
+      const rawMessage = `*New Naming Ceremony Details*\n\n` +
+                         `*Selected Design:* ${selectedDesign}\n` +
+                         `*Mother's Name:* ${motherName}\n` +
+                         `*Father's Name:* ${fatherName}\n` +
+                         `*Baby Gender:* ${gender}\n` +
+                         `*Date & Time:* ${formattedDateTime}\n` +
+                         `*Venue:* ${venue}\n` +
+                         `*Inviter:* ${inviter}`;
+
+      const encodedMessage = encodeURIComponent(rawMessage);
+      const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
+      
+      window.open(whatsappUrl, '_blank', 'noopener');
+      closeOrderForm();
+    });
+  }
+});
+
 updateControls();
 renderItems();

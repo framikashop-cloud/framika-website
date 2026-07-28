@@ -8,6 +8,7 @@
   <meta name="keywords" content="naamkaran video invitation, naming ceremony invitation video, marathi naamkaran card, baby boy naming ceremony card, baby girl naamkaran video, whatsapp invitation video, नामकरण निमंत्रण पत्रिका, marathi invitation video maker, naming ceremony invitation card online">
   <link rel="canonical" href="https://framika.in/">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👶</text></svg>">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <!-- OpenGraph Metadata -->
   <meta property="og:title" content="Framika - Digital Naming Ceremony Video Invitations & Cards">
@@ -57,7 +58,7 @@
       "priceCurrency": "INR",
       "lowPrice": "149",
       "highPrice": "299",
-      "offerCount": "14"
+      "offerCount": "17"
     }
   }
   </script>
@@ -263,6 +264,102 @@
     <div class="relative max-w-md md:max-w-4xl w-full h-full flex items-center justify-center">
       <button type="button" id="close-modal" class="absolute top-4 right-4 text-white bg-black bg-opacity-50 hover:bg-opacity-70 rounded-full w-10 h-10 flex items-center justify-center transition z-50" aria-label="Close image preview">&times;</button>
       <img id="modal-image" src="" alt="Full size preview" class="max-h-[90vh] max-w-full object-contain rounded-lg shadow-2xl">
+    </div>
+  </div>
+
+  <!-- Order Details Form Modal -->
+  <div id="order-form-modal" class="fixed inset-0 z-[100] hidden bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-label="Invitation Details Form">
+    <div class="bg-white w-full max-w-2xl rounded-3xl overflow-hidden relative shadow-2xl my-8">
+      <button type="button" id="close-order-modal" class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 bg-gray-100 hover:bg-gray-200 rounded-full w-10 h-10 flex items-center justify-center transition z-50 text-xl font-bold" aria-label="Close form">&times;</button>
+      
+      <!-- Modal Header -->
+      <div class="bg-gradient-to-r from-amber-100 via-white to-pink-100 p-6 sm:p-8 text-center relative border-b border-gray-100">
+        <h3 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">Naming Ceremony Details</h3>
+        <p class="text-amber-800 font-semibold text-sm sm:text-base">Selected Design: <span id="modal-design-title" class="underline"></span></p>
+        <p class="text-gray-500 text-xs sm:text-sm mt-1">Fill in ceremony details to proceed with WhatsApp order</p>
+      </div>
+
+      <form id="naming-form" class="p-6 sm:p-8 space-y-5 max-h-[75vh] overflow-y-auto">
+        <input type="hidden" id="selectedDesign" name="selectedDesign">
+
+        <!-- Parents Section -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+          <!-- Mother's Name -->
+          <div>
+            <label class="block text-xs sm:text-sm font-bold text-gray-700 mb-1 ml-1">Mother's Name</label>
+            <div class="relative flex items-center">
+              <span class="absolute left-0 pl-3 flex items-center pointer-events-none text-gray-500 font-semibold text-sm">सौ.</span>
+              <input type="text" id="motherName" name="motherName" required placeholder="First & Last Name" class="w-full pl-10 pr-3 py-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400 text-sm">
+            </div>
+          </div>
+
+          <!-- Father's Name -->
+          <div>
+            <label class="block text-xs sm:text-sm font-bold text-gray-700 mb-1 ml-1">Father's Name</label>
+            <div class="relative flex items-center">
+              <span class="absolute left-0 pl-3 flex items-center pointer-events-none text-gray-500 font-semibold text-sm">श्री</span>
+              <input type="text" id="fatherName" name="fatherName" required placeholder="First & Last Name" class="w-full pl-10 pr-3 py-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400 text-sm">
+            </div>
+          </div>
+        </div>
+
+        <!-- Baby Gender -->
+        <div>
+          <label class="block text-xs sm:text-sm font-bold text-gray-700 mb-2">Baby Gender</label>
+          <div class="grid grid-cols-2 gap-4">
+            <label class="cursor-pointer">
+              <input type="radio" name="babyGender" id="gender-boy" value="Boy" class="peer sr-only" required>
+              <div class="flex flex-col items-center justify-center p-3 border-2 border-gray-200 rounded-xl bg-white peer-checked:border-blue-500 peer-checked:bg-blue-50 transition">
+                <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mb-1 text-blue-600 font-bold"><i class="fa-solid fa-mars"></i></div>
+                <span class="font-bold text-xs sm:text-sm text-gray-700">Baby Boy</span>
+              </div>
+            </label>
+
+            <label class="cursor-pointer">
+              <input type="radio" name="babyGender" id="gender-girl" value="Girl" class="peer sr-only">
+              <div class="flex flex-col items-center justify-center p-3 border-2 border-gray-200 rounded-xl bg-white peer-checked:border-pink-500 peer-checked:bg-pink-50 transition">
+                <div class="w-8 h-8 rounded-full bg-pink-100 flex items-center justify-center mb-1 text-pink-600 font-bold"><i class="fa-solid fa-venus"></i></div>
+                <span class="font-bold text-xs sm:text-sm text-gray-700">Baby Girl</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Date & Time -->
+        <div>
+          <label class="block text-xs sm:text-sm font-bold text-gray-700 mb-1 ml-1">Date & Time of the Event</label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400"><i class="fa-regular fa-calendar-days"></i></span>
+            <input type="datetime-local" id="eventDateTime" name="eventDateTime" required class="w-full pl-10 pr-3 py-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400 text-sm text-gray-700 font-medium">
+          </div>
+        </div>
+
+        <!-- Venue -->
+        <div>
+          <label class="block text-xs sm:text-sm font-bold text-gray-700 mb-1 ml-1">Venue / Place</label>
+          <div class="relative">
+            <span class="absolute top-3 left-0 flex items-center pl-3 text-gray-400"><i class="fa-solid fa-location-dot"></i></span>
+            <textarea id="venue" name="venue" rows="2" required placeholder="Full Address of Venue" class="w-full pl-10 pr-3 py-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400 text-sm resize-none"></textarea>
+          </div>
+        </div>
+
+        <!-- Inviter -->
+        <div>
+          <label class="block text-xs sm:text-sm font-bold text-gray-700 mb-1 ml-1">Inviter (Nimantrak / Host Family)</label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400"><i class="fa-solid fa-envelope-open-text"></i></span>
+            <input type="text" id="inviter" name="inviter" required placeholder="Name of Host or Family" class="w-full pl-10 pr-3 py-2.5 bg-gray-50 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400 text-sm">
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="pt-2 text-center">
+          <button type="submit" class="w-full bg-[#25D366] hover:bg-[#1ebd5b] text-white font-bold py-3.5 px-6 rounded-xl transition shadow-md flex items-center justify-center gap-2 text-base">
+            <span>Submit Details to WhatsApp</span>
+            <i class="fa-brands fa-whatsapp text-xl"></i>
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 
