@@ -49,11 +49,16 @@ function closeOrderForm() {
 function createProductCard(product, type) {
   const highlighted = product.badge || product.isCombo;
   const background = product.badge === 'BEST VALUE' ? 'bg-amber-50 border-2 border-amber-400' : highlighted ? 'bg-amber-50 border-2 border-amber-300' : 'bg-white border border-gray-100';
-  const badge = product.badge ? `<div class="absolute top-0 right-0 bg-amber-500 text-white font-bold py-1 px-2 sm:px-3 rounded-bl-lg z-10 text-[10px] sm:text-xs shadow-sm">${escapeHtml(product.badge)}</div>` : '';
+  const badge = product.badge ? `<div class="absolute top-0 right-0 bg-amber-500 text-white font-bold py-1 px-2 sm:px-3 rounded-bl-lg z-30 text-[10px] sm:text-xs shadow-md uppercase tracking-wider">${escapeHtml(product.badge)}</div>` : '';
   const ratio = type === 'video' ? 'aspect-[9/16]' : 'aspect-[3/4]';
   const safeTitle = escapeHtml(product.title);
   const safeDescription = escapeHtml(product.description);
   const safeName = escapeHtml(product.whatsappName);
+  const oldP = Number(product.oldPrice);
+  const newP = Number(product.newPrice);
+  const discountPercent = (oldP && newP && oldP > newP) ? Math.round(((oldP - newP) / oldP) * 100) : 0;
+  const discountBadge = discountPercent > 0 ? `<span class="ml-1.5 sm:ml-2 bg-red-500 text-white font-extrabold text-[10px] sm:text-xs px-2 py-0.5 rounded-md shadow-sm uppercase tracking-wide">${discountPercent}% OFF</span>` : '';
+
   const media = type === 'video'
     ? `<button type="button" class="video-preview relative w-full ${ratio} bg-gray-200 group overflow-hidden cursor-pointer" data-video-url="${escapeHtml(product.directVideoUrl)}" aria-label="Play ${safeTitle}">
          <img src="${escapeHtml(product.thumbnailImage)}" alt="Marathi Baby ${product.gender === 'boy' ? 'Boy' : 'Girl'} Naamkaran Video Invitation Design ${safeTitle}" class="absolute inset-0 w-full h-full object-cover z-10 transition-opacity duration-300">
@@ -69,7 +74,7 @@ function createProductCard(product, type) {
     <div class="p-3 sm:p-5 flex flex-col flex-grow">
       <h3 class="text-sm sm:text-lg font-bold text-gray-900 mb-1 leading-tight">${safeTitle}</h3>
       <p class="text-xs sm:text-sm text-gray-600 mb-2 sm:mb-4 flex-grow line-clamp-2">${safeDescription}</p>
-      <div class="mb-3 sm:mb-4"><span class="text-gray-400 line-through text-xs sm:text-sm mr-1">&#8377;${escapeHtml(product.oldPrice)}</span><span class="text-base sm:text-2xl font-bold text-green-600">&#8377;${escapeHtml(product.newPrice)}</span></div>
+      <div class="mb-3 sm:mb-4 flex items-center flex-wrap gap-1"><span class="text-gray-400 line-through text-xs sm:text-sm mr-1">&#8377;${escapeHtml(product.oldPrice)}</span><span class="text-base sm:text-2xl font-bold text-green-600">&#8377;${escapeHtml(product.newPrice)}</span>${discountBadge}</div>
       <button type="button" class="order-button w-full bg-[#25D366] hover:bg-[#1ebd5b] text-white font-bold py-2 sm:py-3 px-2 sm:px-4 rounded-xl transition shadow-sm" data-item-name="${safeName}">Order on WhatsApp</button>
     </div>
   </article>`;
@@ -127,7 +132,7 @@ document.addEventListener('click', (event) => {
     video.controls = true;
     video.playsInline = true;
     video.autoplay = true;
-    video.className = 'absolute inset-0 w-full h-full object-cover z-30';
+    video.className = 'absolute inset-0 w-full h-full object-cover z-40';
     videoButton.replaceWith(video);
   }
 
