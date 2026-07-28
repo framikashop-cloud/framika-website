@@ -142,9 +142,10 @@ document.addEventListener('keydown', (event) => {
   }
 });
 
-document.addEventListener('DOMContentLoaded', () => {
+function initNamingForm() {
   const form = document.getElementById('naming-form');
-  if (form) {
+  if (form && !form.dataset.initialized) {
+    form.dataset.initialized = 'true';
     form.addEventListener('submit', function(e) {
       e.preventDefault();
 
@@ -180,7 +181,13 @@ document.addEventListener('DOMContentLoaded', () => {
       closeOrderForm();
     });
   }
-});
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initNamingForm);
+} else {
+  initNamingForm();
+}
 
 updateControls();
 renderItems();
