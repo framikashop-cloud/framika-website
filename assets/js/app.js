@@ -24,11 +24,11 @@ function createProductCard(product, type) {
   const safeName = encodeURIComponent(product.whatsappName);
   const media = type === 'video'
     ? `<button type="button" class="video-preview relative w-full ${ratio} bg-gray-200 group overflow-hidden cursor-pointer" data-video-url="${escapeHtml(product.directVideoUrl)}" aria-label="Play ${safeTitle}">
-         <img src="${escapeHtml(product.thumbnailImage)}" alt="${safeTitle}" class="absolute inset-0 w-full h-full object-cover z-10 transition-opacity duration-300">
+         <img src="${escapeHtml(product.thumbnailImage)}" alt="Marathi Baby ${product.gender === 'boy' ? 'Boy' : 'Girl'} Naamkaran Video Invitation Design ${safeTitle}" class="absolute inset-0 w-full h-full object-cover z-10 transition-opacity duration-300">
          <span class="play-overlay absolute inset-0 flex items-center justify-center bg-black bg-opacity-20 group-hover:bg-opacity-10 transition z-20"><span class="w-10 h-10 sm:w-14 sm:h-14 bg-amber-500 rounded-full flex items-center justify-center shadow-lg text-white text-xl">&#9654;</span></span>
        </button>`
     : `<button type="button" class="image-preview relative w-full ${ratio} bg-gray-200 cursor-pointer group overflow-hidden" data-image-url="${escapeHtml(product.image)}" data-image-title="${safeTitle}" aria-label="Open ${safeTitle} preview">
-         <img src="${escapeHtml(product.image)}" alt="${safeTitle}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+         <img src="${escapeHtml(product.image)}" alt="Marathi Naming Ceremony Digital Invitation Card Design ${safeTitle}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
          <span class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center"><span class="bg-black bg-opacity-60 text-white rounded-full px-3 py-2 opacity-0 group-hover:opacity-100 transition-all">View</span></span>
        </button>`;
 
