@@ -1,9 +1,249 @@
-/* Page behaviour. Product details live in products.js. */
+/* Page behaviour & Cart Management with Combo Pricing Logic. Product details live in products.js. */
 const WHATSAPP_NUMBER = '919431817472';
 let currentTab = 'video';
 let currentFilter = 'all';
 
+// Persistent Cart State
+let cart = JSON.parse(localStorage.getItem('framika_cart') || '[]');
+
 const escapeHtml = (value) => String(value).replace(/[&<>'"]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[character]));
+
+function saveCart() {
+  localStorage.setItem('framika_cart', JSON.stringify(cart));
+  updateCartUI();
+}
+
+function calculateCartTotals() {
+  let numVideos = 0;
+  let numCards = 0;
+  let subtotal = 0;
+
+  cart.forEach(item => {
+    const qty = item.quantity || 1;
+    const price = Number(item.newPrice) || 0;
+    subtotal += price * qty;
+    if (item.type === 'video') {
+      numVideos += qty;
+    } else if (item.type === 'card') {
+      numCards += qty;
+    }
+  });
+
+  // Combo Offer Pricing Logic:
+  // Video standard price: ₹299, Card standard price: ₹149 (Total = ₹448).
+  // Combo pair (1 Video + 1 Card) = ₹299 total!
+  // Combo discount per pair = ₹448 - ₹299 = ₹149 off.
+  const numCombos = Math.min(numVideos, numCards);
+  const discountPerCombo = 149;
+  const comboDiscount = numCombos * discountPerCombo;
+  const finalTotal = Math.max(0, subtotal - comboDiscount);
+  const totalCount = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+
+  return {
+    numVideos,
+    numCards,
+    numCombos,
+    subtotal,
+    comboDiscount,
+    finalTotal,
+    totalCount
+  };
+}
+
+function addToCart(title) {
+  const product = findProductByTitle(title);
+  if (!product) return;
+
+  const existingIndex = cart.findIndex(item => item.title === product.title);
+  if (existingIndex > -1) {
+    cart[existingIndex].quantity = (cart[existingIndex].quantity || 1) + 1;
+  } else {
+    cart.push({
+      title: product.title,
+      whatsappName: product.whatsappName || product.title,
+      newPrice: product.newPrice,
+      oldPrice: product.oldPrice,
+      type: product.type || (product.directVideoUrl ? 'video' : 'card'),
+      image: product.thumbnailImage || product.image,
+      gender: product.gender,
+      quantity: 1
+    });
+  }
+
+  saveCart();
+  showToast(`Added <strong>${escapeHtml(product.title)}</strong> to cart! 🛒`);
+
+  // Animate cart badge count
+  const badges = [document.getElementById('cart-count-badge'), document.getElementById('floating-cart-count')];
+  badges.forEach(b => {
+    if (b) {
+      b.classList.remove('badge-bounce');
+      void b.offsetWidth; // trigger reflow
+      b.classList.add('badge-bounce');
+    }
+  });
+}
+
+function updateQuantity(title, delta) {
+  const index = cart.findIndex(item => item.title === title);
+  if (index > -1) {
+    cart[index].quantity = (cart[index].quantity || 1) + delta;
+    if (cart[index].quantity <= 0) {
+      cart.splice(index, 1);
+    }
+    saveCart();
+  }
+}
+
+function removeFromCart(title) {
+  cart = cart.filter(item => item.title !== title);
+  saveCart();
+}
+
+function clearCart() {
+  cart = [];
+  saveCart();
+}
+
+function showToast(message) {
+  const container = document.getElementById('toast-container');
+  if (!container) return;
+  const toast = document.createElement('div');
+  toast.className = 'bg-gray-900 text-white text-xs sm:text-sm font-semibold px-4 py-2.5 rounded-full shadow-2xl toast-animate mb-2 flex items-center gap-2 border border-gray-700';
+  toast.innerHTML = message;
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.remove();
+  }, 2500);
+}
+
+function updateCartUI() {
+  const totals = calculateCartTotals();
+  
+  // Badges
+  const countBadge = document.getElementById('cart-count-badge');
+  const floatingCount = document.getElementById('floating-cart-count');
+  if (countBadge) countBadge.textContent = totals.totalCount;
+  if (floatingCount) floatingCount.textContent = totals.totalCount;
+
+  // Cart Modal Elements
+  const itemsContainer = document.getElementById('cart-items-container');
+  const comboBanner = document.getElementById('combo-banner-container');
+  const subtotalEl = document.getElementById('cart-subtotal');
+  const discountRow = document.getElementById('cart-discount-row');
+  const discountAmountEl = document.getElementById('cart-discount-amount');
+  const finalTotalEl = document.getElementById('cart-final-total');
+
+  if (subtotalEl) subtotalEl.innerHTML = `&#8377;${totals.subtotal}`;
+  if (finalTotalEl) finalTotalEl.innerHTML = `&#8377;${totals.finalTotal}`;
+
+  if (discountRow && discountAmountEl) {
+    if (totals.comboDiscount > 0) {
+      discountRow.classList.remove('hidden');
+      discountAmountEl.innerHTML = `-&#8377;${totals.comboDiscount}`;
+    } else {
+      discountRow.classList.add('hidden');
+    }
+  }
+
+  // Render Combo Banner
+  if (comboBanner) {
+    if (totals.numCombos > 0) {
+      comboBanner.innerHTML = `
+        <div class="flex items-center gap-2 text-green-800 text-xs sm:text-sm font-semibold">
+          <span class="text-xl">🎉</span>
+          <div>
+            <span>Combo Offer Applied! (${totals.numCombos} Combo Pair${totals.numCombos > 1 ? 's' : ''})</span>
+            <p class="text-[11px] text-green-700 font-normal">Card + Video bundle price applied at <strong>₹299</strong> (Saved ₹${totals.comboDiscount})!</p>
+          </div>
+        </div>`;
+    } else if (totals.numVideos > 0 && totals.numCards === 0) {
+      comboBanner.innerHTML = `
+        <div class="flex items-center gap-2 text-amber-900 text-xs sm:text-sm font-medium">
+          <span class="text-xl">💡</span>
+          <div>
+            <span class="font-bold">Add any Digital Card to get the Combo Offer!</span>
+            <p class="text-[11px] text-amber-800">Get 1 Video + 1 Card together for just <span class="font-bold underline">₹299</span> total!</p>
+          </div>
+        </div>`;
+    } else if (totals.numCards > 0 && totals.numVideos === 0) {
+      comboBanner.innerHTML = `
+        <div class="flex items-center gap-2 text-amber-900 text-xs sm:text-sm font-medium">
+          <span class="text-xl">💡</span>
+          <div>
+            <span class="font-bold">Add any Video Invitation to get the Combo Offer!</span>
+            <p class="text-[11px] text-amber-800">Get 1 Card + 1 Video together for just <span class="font-bold underline">₹299</span> total!</p>
+          </div>
+        </div>`;
+    } else {
+      comboBanner.innerHTML = `
+        <div class="text-center text-xs text-amber-900 font-medium">
+          🎁 <span class="font-bold">Special Combo Offer:</span> Add 1 Card + 1 Video for just <span class="font-bold underline">₹299</span>!
+        </div>`;
+    }
+  }
+
+  // Render Items List
+  if (itemsContainer) {
+    if (cart.length === 0) {
+      itemsContainer.innerHTML = `
+        <div class="h-full flex flex-col items-center justify-center text-center text-gray-400 py-12">
+          <i class="fa-solid fa-basket-shopping text-5xl mb-3 text-gray-300"></i>
+          <p class="text-sm font-semibold text-gray-600">Your cart is currently empty</p>
+          <p class="text-xs text-gray-400 mt-1 max-w-xs">Browse our video invitations and digital cards to build your combo!</p>
+        </div>`;
+    } else {
+      itemsContainer.innerHTML = cart.map((item) => {
+        const itemTotal = Number(item.newPrice) * item.quantity;
+        const isVideo = item.type === 'video';
+        return `
+          <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-2xl border border-gray-200 shadow-sm relative group">
+            <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}" class="w-16 h-20 object-cover rounded-xl border border-gray-200 flex-shrink-0">
+            
+            <div class="flex-grow min-w-0">
+              <div class="flex items-center gap-1.5 mb-1">
+                <span class="text-[10px] uppercase tracking-wider font-extrabold px-2 py-0.5 rounded ${isVideo ? 'bg-amber-100 text-amber-800' : 'bg-blue-100 text-blue-800'}">
+                  ${isVideo ? '📹 Video' : '🎨 Card'}
+                </span>
+              </div>
+              <h4 class="font-bold text-gray-900 text-xs sm:text-sm truncate">${escapeHtml(item.title)}</h4>
+              <p class="text-xs font-semibold text-green-600 mt-0.5">&#8377;${item.newPrice} <span class="text-[10px] text-gray-400 font-normal">each</span></p>
+
+              <!-- Quantity Controls -->
+              <div class="flex items-center gap-2 mt-2">
+                <div class="inline-flex items-center border border-gray-300 rounded-lg bg-white overflow-hidden shadow-xs">
+                  <button type="button" class="cart-qty-btn px-2 py-0.5 text-gray-600 hover:bg-gray-100 font-bold text-xs" data-action="decrease" data-title="${escapeHtml(item.title)}">-</button>
+                  <span class="px-2 py-0.5 text-xs font-bold text-gray-800">${item.quantity}</span>
+                  <button type="button" class="cart-qty-btn px-2 py-0.5 text-gray-600 hover:bg-gray-100 font-bold text-xs" data-action="increase" data-title="${escapeHtml(item.title)}">+</button>
+                </div>
+                <button type="button" class="cart-remove-btn text-xs text-red-400 hover:text-red-600 ml-auto p-1" data-title="${escapeHtml(item.title)}" aria-label="Remove item">
+                  <i class="fa-regular fa-trash-can"></i>
+                </button>
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+  }
+}
+
+function openCartModal() {
+  const modal = document.getElementById('cart-modal');
+  if (modal) {
+    updateCartUI();
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeCartModal() {
+  const modal = document.getElementById('cart-modal');
+  if (modal) {
+    modal.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+}
 
 function getFilteredItems(items) {
   return items.filter((item) => currentFilter === 'all' || item.gender === currentFilter || item.gender === 'both');
@@ -14,14 +254,15 @@ function openOrderForm(itemName) {
   const titleSpan = document.getElementById('modal-design-title');
   const designInput = document.getElementById('selectedDesign');
   
-  if (titleSpan) titleSpan.textContent = itemName;
-  if (designInput) designInput.value = itemName;
+  const displayTitle = itemName || 'Custom Order';
+  if (titleSpan) titleSpan.textContent = displayTitle;
+  if (designInput) designInput.value = displayTitle;
 
   // Auto-select gender if title indicates gender
-  if (itemName.includes('NM-MR-B') || itemName.toLowerCase().includes('boy')) {
+  if (displayTitle.includes('NM-MR-B') || displayTitle.toLowerCase().includes('boy')) {
     const boyRadio = document.getElementById('gender-boy');
     if (boyRadio) boyRadio.checked = true;
-  } else if (itemName.includes('NM-MR-G') || itemName.toLowerCase().includes('girl')) {
+  } else if (displayTitle.includes('NM-MR-G') || displayTitle.toLowerCase().includes('girl')) {
     const girlRadio = document.getElementById('gender-girl');
     if (girlRadio) girlRadio.checked = true;
   }
@@ -75,7 +316,18 @@ function createProductCard(product, type) {
       <h3 class="text-sm sm:text-lg font-bold text-gray-900 mb-1 leading-tight">${safeTitle}</h3>
       <p class="text-xs sm:text-sm text-gray-600 mb-2 sm:mb-4 flex-grow line-clamp-2">${safeDescription}</p>
       <div class="mb-3 sm:mb-4 flex items-center flex-wrap gap-1"><span class="text-gray-400 line-through text-xs sm:text-sm mr-1">&#8377;${escapeHtml(product.oldPrice)}</span><span class="text-base sm:text-2xl font-bold text-green-600">&#8377;${escapeHtml(product.newPrice)}</span>${discountBadge}</div>
-      <button type="button" class="order-button w-full bg-[#25D366] hover:bg-[#1ebd5b] text-white font-bold py-2 sm:py-3 px-2 sm:px-4 rounded-xl transition shadow-sm" data-item-name="${safeName}">Order on WhatsApp</button>
+      
+      <!-- Dual Buttons: Add to Cart & Direct WhatsApp Order -->
+      <div class="flex flex-col sm:flex-row gap-2 mt-auto">
+        <button type="button" class="add-cart-button flex-1 bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 sm:py-2.5 px-2 rounded-xl transition shadow-sm flex items-center justify-center gap-1.5 text-xs sm:text-sm cursor-pointer" data-item-name="${safeTitle}">
+          <i class="fa-solid fa-cart-plus"></i>
+          <span>Add to Cart</span>
+        </button>
+        <button type="button" class="order-button flex-1 bg-[#25D366] hover:bg-[#1ebd5b] text-white font-bold py-2 sm:py-2.5 px-2 rounded-xl transition shadow-sm flex items-center justify-center gap-1.5 text-xs sm:text-sm cursor-pointer" data-item-name="${safeName}">
+          <i class="fa-brands fa-whatsapp"></i>
+          <span>Order Now</span>
+        </button>
+      </div>
     </div>
   </article>`;
 }
@@ -117,12 +369,63 @@ document.addEventListener('click', (event) => {
   const tabButton = event.target.closest('[data-tab]');
   const filterButton = event.target.closest('[data-filter]');
   const orderButton = event.target.closest('.order-button');
+  const addCartButton = event.target.closest('.add-cart-button');
   const videoButton = event.target.closest('.video-preview');
   const imageButton = event.target.closest('.image-preview');
 
+  const openCartBtn = event.target.closest('#open-cart-btn');
+  const floatingCartBtn = event.target.closest('#floating-cart-btn');
+  const closeCartBtn = event.target.closest('#close-cart-modal');
+
+  const qtyBtn = event.target.closest('.cart-qty-btn');
+  const removeBtn = event.target.closest('.cart-remove-btn');
+  const clearBtn = event.target.closest('#clear-cart-btn');
+  const checkoutBtn = event.target.closest('#cart-checkout-btn');
+
   if (tabButton) { currentTab = tabButton.dataset.tab; updateControls(); renderItems(); }
   if (filterButton) { currentFilter = filterButton.dataset.filter; updateControls(); renderItems(); }
-  if (orderButton) openOrderForm(orderButton.dataset.itemName);
+
+  if (addCartButton) {
+    addToCart(addCartButton.dataset.itemName);
+  }
+
+  if (orderButton) {
+    openOrderForm(orderButton.dataset.itemName);
+  }
+
+  if (openCartBtn || floatingCartBtn) {
+    openCartModal();
+  }
+
+  if (closeCartBtn || event.target === document.getElementById('cart-modal')) {
+    closeCartModal();
+  }
+
+  if (qtyBtn) {
+    const title = qtyBtn.dataset.title;
+    const action = qtyBtn.dataset.action;
+    updateQuantity(title, action === 'increase' ? 1 : -1);
+  }
+
+  if (removeBtn) {
+    removeFromCart(removeBtn.dataset.title);
+  }
+
+  if (clearBtn) {
+    clearCart();
+  }
+
+  if (checkoutBtn) {
+    if (cart.length === 0) {
+      showToast('Your cart is empty! Add products first.');
+      return;
+    }
+    const totals = calculateCartTotals();
+    const cartTitleSummary = `Cart Order (${totals.totalCount} item${totals.totalCount > 1 ? 's' : ''})`;
+    closeCartModal();
+    openOrderForm(cartTitleSummary);
+  }
+
   if (imageButton) openImageModal(imageButton.dataset.imageUrl, imageButton.dataset.imageTitle);
 
   if (videoButton) {
@@ -144,6 +447,7 @@ document.addEventListener('keydown', (event) => {
   if (event.key === 'Escape') {
     closeImageModal();
     closeOrderForm();
+    closeCartModal();
   }
 });
 
@@ -170,29 +474,61 @@ function initNamingForm() {
         formattedDateTime = eventDateObj.toLocaleString('en-US', options);
       }
 
-      const rawMessage = `*New Naming Ceremony Details*\n\n` +
-                         `*Selected Design:* ${selectedDesign}\n` +
-                         `*Mother's Name:* ${motherName}\n` +
-                         `*Father's Name:* ${fatherName}\n` +
-                         `*Baby Gender:* ${gender}\n` +
-                         `*Date & Time:* ${formattedDateTime}\n` +
-                         `*Venue:* ${venue}\n` +
-                         `*Inviter:* ${inviter}`;
+      let orderMessage = '';
 
-      const encodedMessage = encodeURIComponent(rawMessage);
+      if (selectedDesign.startsWith('Cart Order') && cart.length > 0) {
+        const totals = calculateCartTotals();
+        const itemsList = cart.map(item => `  • ${item.title} (${item.type === 'video' ? 'Video' : 'Card'}) x${item.quantity} = ₹${Number(item.newPrice) * item.quantity}`).join('\n');
+        
+        let discountInfo = totals.comboDiscount > 0 ? `\n*Combo Offer Savings:* -₹${totals.comboDiscount} (Card + Video Combo Deal applied!)` : '';
+
+        orderMessage = `*New Naming Ceremony Cart Order*\n\n` +
+                       `*Selected Items:*\n${itemsList}\n\n` +
+                       `*Subtotal:* ₹${totals.subtotal}` +
+                       `${discountInfo}\n` +
+                       `*Total Amount:* ₹${totals.finalTotal}\n\n` +
+                       `*--- Ceremony Details ---*\n` +
+                       `*Mother's Name:* ${motherName}\n` +
+                       `*Father's Name:* ${fatherName}\n` +
+                       `*Baby Gender:* ${gender}\n` +
+                       `*Date & Time:* ${formattedDateTime}\n` +
+                       `*Venue:* ${venue}\n` +
+                       `*Inviter:* ${inviter}`;
+      } else {
+        orderMessage = `*New Naming Ceremony Order*\n\n` +
+                       `*Selected Design:* ${selectedDesign}\n` +
+                       `*Mother's Name:* ${motherName}\n` +
+                       `*Father's Name:* ${fatherName}\n` +
+                       `*Baby Gender:* ${gender}\n` +
+                       `*Date & Time:* ${formattedDateTime}\n` +
+                       `*Venue:* ${venue}\n` +
+                       `*Inviter:* ${inviter}`;
+      }
+
+      const encodedMessage = encodeURIComponent(orderMessage);
       const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
       
       window.open(whatsappUrl, '_blank', 'noopener');
+      
+      if (selectedDesign.startsWith('Cart Order')) {
+        clearCart();
+      }
+
       closeOrderForm();
     });
   }
 }
 
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initNamingForm);
+  document.addEventListener('DOMContentLoaded', () => {
+    initNamingForm();
+    updateControls();
+    renderItems();
+    updateCartUI();
+  });
 } else {
   initNamingForm();
+  updateControls();
+  renderItems();
+  updateCartUI();
 }
-
-updateControls();
-renderItems();
