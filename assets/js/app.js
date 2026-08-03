@@ -1,15 +1,40 @@
-/* Page behaviour & Cart Management with Combo Pricing Logic. Product details live in products.js. */
+/* Page behaviour & Cart Management with Combo Pricing Logic, Coupons, Sharing & Social Proof. Product details live in products.js. */
 const WHATSAPP_NUMBER = '919431817472';
 let currentTab = 'video';
 let currentFilter = 'all';
 
-// Persistent Cart State
+// Persistent Cart State & Coupon State
 let cart = JSON.parse(localStorage.getItem('framika_cart') || '[]');
+let activeCoupon = JSON.parse(localStorage.getItem('framika_coupon') || 'null');
+
+// Available Promo Codes Database
+const PROMO_CODES = {
+  'FIRST50': { type: 'fixed', value: 50, label: '₹50 OFF (Welcome Offer)' },
+  'FRAMIKA10': { type: 'percent', value: 10, label: '10% OFF' },
+  'SPECIAL30': { type: 'fixed', value: 30, label: '₹30 OFF' },
+  'COMBO299': { type: 'fixed', value: 25, label: '₹25 Extra Combo Bonus' }
+};
+
+// Social Proof Events Database
+const SOCIAL_PROOF_EVENTS = [
+  { name: 'Sneta P.', city: 'Pune', item: 'NM-MR-B-01', type: 'ordered', time: '4 mins ago' },
+  { name: 'Rahul M.', city: 'Nashik', item: 'Card 2', type: 'added', time: '2 mins ago' },
+  { name: 'Priya S.', city: 'Mumbai', item: 'NM-MR-G-02', type: 'ordered', time: '10 mins ago' },
+  { name: 'Vikram K.', city: 'Nagpur', item: 'Card 7', type: 'added', time: 'Just now' },
+  { name: 'Anjali D.', city: 'Thane', item: 'NM-MR-TG-01', type: 'ordered', time: '7 mins ago' },
+  { name: 'Sanjay R.', city: 'Kolhapur', item: 'Card 3', type: 'added', time: '14 mins ago' },
+  { name: 'Amol B.', city: 'PCMC', item: 'NM-MR-B-05', type: 'ordered', time: '3 mins ago' }
+];
 
 const escapeHtml = (value) => String(value).replace(/[&<>'"]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[character]));
 
 function saveCart() {
   localStorage.setItem('framika_cart', JSON.stringify(cart));
+  if (activeCoupon) {
+    localStorage.setItem('framika_coupon', JSON.stringify(activeCoupon));
+  } else {
+    localStorage.removeItem('framika_coupon');
+  }
   updateCartUI();
 }
 
@@ -36,7 +61,20 @@ function calculateCartTotals() {
   const numCombos = Math.min(numVideos, numCards);
   const discountPerCombo = 149;
   const comboDiscount = numCombos * discountPerCombo;
-  const finalTotal = Math.max(0, subtotal - comboDiscount);
+  const afterCombo = Math.max(0, subtotal - comboDiscount);
+
+  // Coupon Discount Logic
+  let couponDiscount = 0;
+  if (activeCoupon && PROMO_CODES[activeCoupon.code] && afterCombo > 0) {
+    const couponData = PROMO_CODES[activeCoupon.code];
+    if (couponData.type === 'fixed') {
+      couponDiscount = Math.min(couponData.value, afterCombo);
+    } else if (couponData.type === 'percent') {
+      couponDiscount = Math.round(afterCombo * (couponData.value / 100));
+    }
+  }
+
+  const finalTotal = Math.max(0, afterCombo - couponDiscount);
   const totalCount = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
 
   return {
@@ -45,9 +83,37 @@ function calculateCartTotals() {
     numCombos,
     subtotal,
     comboDiscount,
+    couponDiscount,
     finalTotal,
     totalCount
   };
+}
+
+function applyCouponCode(rawCode) {
+  const code = (rawCode || '').trim().toUpperCase();
+  if (!code) {
+    showToast('Please enter a promo code.');
+    return;
+  }
+
+  if (PROMO_CODES[code]) {
+    activeCoupon = { code, ...PROMO_CODES[code] };
+    saveCart();
+    showToast(`🎉 Coupon <strong>${code}</strong> applied successfully!`);
+    const input = document.getElementById('coupon-input');
+    if (input) input.value = '';
+  } else {
+    showToast('❌ Invalid promo code. Try <strong>FIRST50</strong> or <strong>FRAMIKA10</strong>!');
+  }
+}
+
+function removeCouponCode() {
+  if (activeCoupon) {
+    const code = activeCoupon.code;
+    activeCoupon = null;
+    saveCart();
+    showToast(`Removed coupon <strong>${code}</strong>.`);
+  }
 }
 
 function addToCart(title) {
@@ -102,6 +168,7 @@ function removeFromCart(title) {
 
 function clearCart() {
   cart = [];
+  activeCoupon = null;
   saveCart();
 }
 
@@ -109,13 +176,36 @@ function showToast(message) {
   const container = document.getElementById('toast-container');
   if (!container) return;
   const toast = document.createElement('div');
-  toast.className = 'bg-gray-900 text-white text-xs sm:text-sm font-semibold px-4 py-2.5 rounded-full shadow-2xl toast-animate mb-2 flex items-center gap-2 border border-gray-700';
+  toast.className = 'bg-gray-900 text-white text-xs sm:text-sm font-semibold px-4 py-2.5 rounded-full shadow-2xl toast-animate mb-2 flex items-center gap-2 border border-gray-700 z-[120]';
   toast.innerHTML = message;
   container.appendChild(toast);
 
   setTimeout(() => {
     toast.remove();
-  }, 2500);
+  }, 3000);
+}
+
+function shareProduct(title, mediaUrl) {
+  const product = findProductByTitle(title);
+  const shareTitle = title || 'Framika Naamkaran Invitation';
+  const shareText = `Check out this beautiful ${shareTitle} Naamkaran Invitation design on Framika Invites! 👶✨`;
+  const shareUrl = window.location.href;
+
+  if (navigator.share) {
+    navigator.share({
+      title: shareTitle,
+      text: shareText,
+      url: shareUrl
+    }).catch(() => {});
+  } else {
+    // Copy link to clipboard
+    const clipText = `${shareText}\n${shareUrl}`;
+    navigator.clipboard.writeText(clipText).then(() => {
+      showToast(`📲 Link for <strong>${escapeHtml(shareTitle)}</strong> copied! Share with family on WhatsApp.`);
+    }).catch(() => {
+      showToast(`Sharing design: ${escapeHtml(shareTitle)}`);
+    });
+  }
 }
 
 function updateCartUI() {
@@ -133,17 +223,39 @@ function updateCartUI() {
   const subtotalEl = document.getElementById('cart-subtotal');
   const discountRow = document.getElementById('cart-discount-row');
   const discountAmountEl = document.getElementById('cart-discount-amount');
+  
+  const couponDiscountRow = document.getElementById('coupon-discount-row');
+  const couponDiscountAmountEl = document.getElementById('coupon-discount-amount');
+  const appliedCouponBox = document.getElementById('applied-coupon-container');
+  const appliedCouponText = document.getElementById('applied-coupon-text');
+
   const finalTotalEl = document.getElementById('cart-final-total');
 
   if (subtotalEl) subtotalEl.innerHTML = `&#8377;${totals.subtotal}`;
   if (finalTotalEl) finalTotalEl.innerHTML = `&#8377;${totals.finalTotal}`;
 
+  // Combo Discount Row
   if (discountRow && discountAmountEl) {
     if (totals.comboDiscount > 0) {
       discountRow.classList.remove('hidden');
       discountAmountEl.innerHTML = `-&#8377;${totals.comboDiscount}`;
     } else {
       discountRow.classList.add('hidden');
+    }
+  }
+
+  // Coupon Discount Row & Badge
+  if (couponDiscountRow && couponDiscountAmountEl && appliedCouponBox) {
+    if (activeCoupon && totals.couponDiscount > 0) {
+      couponDiscountRow.classList.remove('hidden');
+      couponDiscountAmountEl.innerHTML = `-&#8377;${totals.couponDiscount}`;
+      appliedCouponBox.classList.remove('hidden');
+      if (appliedCouponText) {
+        appliedCouponText.textContent = `${activeCoupon.code} (${activeCoupon.label})`;
+      }
+    } else {
+      couponDiscountRow.classList.add('hidden');
+      appliedCouponBox.classList.add('hidden');
     }
   }
 
@@ -300,15 +412,26 @@ function createProductCard(product, type) {
   const discountPercent = (oldP && newP && oldP > newP) ? Math.round(((oldP - newP) / oldP) * 100) : 0;
   const discountBadge = discountPercent > 0 ? `<span class="ml-1.5 sm:ml-2 bg-red-500 text-white font-extrabold text-[10px] sm:text-xs px-2 py-0.5 rounded-md shadow-sm uppercase tracking-wide">${discountPercent}% OFF</span>` : '';
 
+  // Quick Share Button on Media Thumbnail
+  const shareButtonHtml = `<button type="button" class="share-button absolute top-2 left-2 bg-white/90 hover:bg-white text-gray-700 hover:text-amber-600 rounded-full w-8 h-8 flex items-center justify-center shadow-md transition z-30 cursor-pointer" data-item-title="${safeTitle}" data-item-url="${escapeHtml(product.directVideoUrl || product.image)}" aria-label="Share ${safeTitle}">
+    <i class="fa-solid fa-share-nodes text-xs sm:text-sm"></i>
+  </button>`;
+
   const media = type === 'video'
-    ? `<button type="button" class="video-preview relative w-full ${ratio} bg-gray-200 group overflow-hidden cursor-pointer" data-video-url="${escapeHtml(product.directVideoUrl)}" aria-label="Play ${safeTitle}">
-         <img src="${escapeHtml(product.thumbnailImage)}" alt="Marathi Baby ${product.gender === 'boy' ? 'Boy' : 'Girl'} Naamkaran Video Invitation Design ${safeTitle}" class="absolute inset-0 w-full h-full object-cover z-10 transition-opacity duration-300">
-         <span class="play-overlay absolute inset-0 flex items-center justify-center bg-black bg-opacity-20 group-hover:bg-opacity-10 transition z-20"><span class="w-10 h-10 sm:w-14 sm:h-14 bg-amber-500 rounded-full flex items-center justify-center shadow-lg text-white text-xl">&#9654;</span></span>
-       </button>`
-    : `<button type="button" class="image-preview relative w-full ${ratio} bg-gray-200 cursor-pointer group overflow-hidden" data-image-url="${escapeHtml(product.image)}" data-image-title="${safeTitle}" aria-label="Open ${safeTitle} preview">
-         <img src="${escapeHtml(product.image)}" alt="Marathi Naming Ceremony Digital Invitation Card Design ${safeTitle}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-         <span class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center"><span class="bg-black bg-opacity-60 text-white rounded-full px-3 py-2 opacity-0 group-hover:opacity-100 transition-all">View</span></span>
-       </button>`;
+    ? `<div class="media-container relative w-full ${ratio} bg-gray-200 overflow-hidden flex-shrink-0">
+         ${shareButtonHtml}
+         <button type="button" class="video-preview absolute inset-0 w-full h-full group overflow-hidden cursor-pointer block" data-video-url="${escapeHtml(product.directVideoUrl)}" aria-label="Play ${safeTitle}">
+           <img src="${escapeHtml(product.thumbnailImage)}" alt="Marathi Baby ${product.gender === 'boy' ? 'Boy' : 'Girl'} Naamkaran Video Invitation Design ${safeTitle}" class="absolute inset-0 w-full h-full object-cover z-10 transition-opacity duration-300">
+           <span class="play-overlay absolute inset-0 flex items-center justify-center bg-black bg-opacity-20 group-hover:bg-opacity-10 transition z-20"><span class="w-10 h-10 sm:w-14 sm:h-14 bg-amber-500 rounded-full flex items-center justify-center shadow-lg text-white text-xl">&#9654;</span></span>
+         </button>
+       </div>`
+    : `<div class="media-container relative w-full ${ratio} bg-gray-200 overflow-hidden flex-shrink-0">
+         ${shareButtonHtml}
+         <button type="button" class="image-preview absolute inset-0 w-full h-full cursor-pointer group overflow-hidden block" data-image-url="${escapeHtml(product.image)}" data-image-title="${safeTitle}" aria-label="Open ${safeTitle} preview">
+           <img src="${escapeHtml(product.image)}" alt="Marathi Naming Ceremony Digital Invitation Card Design ${safeTitle}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+           <span class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center"><span class="bg-black bg-opacity-60 text-white rounded-full px-3 py-2 opacity-0 group-hover:opacity-100 transition-all">View</span></span>
+         </button>
+       </div>`;
 
   return `<article class="${background} rounded-2xl shadow-md overflow-hidden card-hover flex flex-col relative">
     ${badge}${media}
@@ -365,11 +488,52 @@ function closeImageModal() {
   document.body.style.overflow = '';
 }
 
+// Social Proof Live Order Ticker Engine
+let socialProofIndex = 0;
+function triggerSocialProofTicker() {
+  const container = document.getElementById('social-proof-container');
+  if (!container) return;
+
+  const event = SOCIAL_PROOF_EVENTS[socialProofIndex];
+  socialProofIndex = (socialProofIndex + 1) % SOCIAL_PROOF_EVENTS.length;
+
+  const card = document.createElement('div');
+  card.className = 'bg-white/95 backdrop-blur-md border border-amber-200 p-3 sm:p-3.5 rounded-2xl shadow-2xl toast-animate flex items-center gap-3 relative overflow-hidden group';
+  card.innerHTML = `
+    <span class="w-9 h-9 rounded-full bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-base flex-shrink-0 shadow-xs">🎉</span>
+    <div class="text-xs min-w-0 pr-4">
+      <p class="font-bold text-gray-900 truncate">${escapeHtml(event.name)} <span class="text-gray-500 font-normal">from ${escapeHtml(event.city)}</span></p>
+      <p class="text-gray-600 truncate mt-0.5">${event.type === 'ordered' ? 'Just ordered' : 'Added to cart:'} <strong class="text-amber-600 font-semibold">${escapeHtml(event.item)}</strong></p>
+      <span class="text-[10px] text-gray-400 font-normal block mt-0.5">${escapeHtml(event.time)}</span>
+    </div>
+    <button type="button" class="close-ticker absolute top-2 right-2 text-gray-400 hover:text-gray-600 text-xs font-bold p-0.5" aria-label="Dismiss">&times;</button>
+  `;
+
+  container.innerHTML = '';
+  container.appendChild(card);
+
+  card.querySelector('.close-ticker').addEventListener('click', () => card.remove());
+
+  setTimeout(() => {
+    if (card.parentElement) {
+      card.style.opacity = '0';
+      card.style.transition = 'opacity 0.5s ease';
+      setTimeout(() => card.remove(), 500);
+    }
+  }, 6000);
+}
+
+function startSocialProofTicker() {
+  setTimeout(triggerSocialProofTicker, 4000);
+  setInterval(triggerSocialProofTicker, 16000);
+}
+
 document.addEventListener('click', (event) => {
   const tabButton = event.target.closest('[data-tab]');
   const filterButton = event.target.closest('[data-filter]');
   const orderButton = event.target.closest('.order-button');
   const addCartButton = event.target.closest('.add-cart-button');
+  const shareButton = event.target.closest('.share-button');
   const videoButton = event.target.closest('.video-preview');
   const imageButton = event.target.closest('.image-preview');
 
@@ -377,16 +541,33 @@ document.addEventListener('click', (event) => {
   const floatingCartBtn = event.target.closest('#floating-cart-btn');
   const closeCartBtn = event.target.closest('#close-cart-modal');
 
+  const applyCouponBtn = event.target.closest('#apply-coupon-btn');
+  const removeCouponBtn = event.target.closest('#remove-coupon-btn');
+
+  const copyCodeBtn = event.target.closest('.copy-code-btn');
+
   const qtyBtn = event.target.closest('.cart-qty-btn');
   const removeBtn = event.target.closest('.cart-remove-btn');
   const clearBtn = event.target.closest('#clear-cart-btn');
   const checkoutBtn = event.target.closest('#cart-checkout-btn');
+
+  if (copyCodeBtn) {
+    const code = copyCodeBtn.dataset.code || 'FIRST50';
+    applyCouponCode(code);
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(code).catch(() => {});
+    }
+  }
 
   if (tabButton) { currentTab = tabButton.dataset.tab; updateControls(); renderItems(); }
   if (filterButton) { currentFilter = filterButton.dataset.filter; updateControls(); renderItems(); }
 
   if (addCartButton) {
     addToCart(addCartButton.dataset.itemName);
+  }
+
+  if (shareButton) {
+    shareProduct(shareButton.dataset.itemTitle, shareButton.dataset.itemUrl);
   }
 
   if (orderButton) {
@@ -399,6 +580,15 @@ document.addEventListener('click', (event) => {
 
   if (closeCartBtn || event.target === document.getElementById('cart-modal')) {
     closeCartModal();
+  }
+
+  if (applyCouponBtn) {
+    const input = document.getElementById('coupon-input');
+    if (input) applyCouponCode(input.value);
+  }
+
+  if (removeCouponBtn) {
+    removeCouponCode();
   }
 
   if (qtyBtn) {
@@ -430,13 +620,15 @@ document.addEventListener('click', (event) => {
 
   if (videoButton) {
     document.querySelectorAll('video').forEach((video) => video.pause());
+    const container = videoButton.closest('.media-container') || videoButton.parentElement;
     const video = document.createElement('video');
     video.src = videoButton.dataset.videoUrl;
     video.controls = true;
     video.playsInline = true;
     video.autoplay = true;
-    video.className = 'absolute inset-0 w-full h-full object-cover z-40';
-    videoButton.replaceWith(video);
+    video.className = 'w-full h-full object-cover z-30 relative';
+    container.innerHTML = '';
+    container.appendChild(video);
   }
 
   if (event.target === document.getElementById('image-modal') || event.target.closest('#close-modal')) closeImageModal();
@@ -444,6 +636,10 @@ document.addEventListener('click', (event) => {
 });
 
 document.addEventListener('keydown', (event) => {
+  if (event.key === 'Enter' && document.activeElement && document.activeElement.id === 'coupon-input') {
+    event.preventDefault();
+    applyCouponCode(document.activeElement.value);
+  }
   if (event.key === 'Escape') {
     closeImageModal();
     closeOrderForm();
@@ -480,13 +676,15 @@ function initNamingForm() {
         const totals = calculateCartTotals();
         const itemsList = cart.map(item => `  • ${item.title} (${item.type === 'video' ? 'Video' : 'Card'}) x${item.quantity} = ₹${Number(item.newPrice) * item.quantity}`).join('\n');
         
-        let discountInfo = totals.comboDiscount > 0 ? `\n*Combo Offer Savings:* -₹${totals.comboDiscount} (Card + Video Combo Deal applied!)` : '';
+        let comboInfo = totals.comboDiscount > 0 ? `\n*Combo Offer Savings:* -₹${totals.comboDiscount} (Card + Video Combo Deal applied!)` : '';
+        let couponInfo = totals.couponDiscount > 0 ? `\n*Promo Coupon (${activeCoupon.code}):* -₹${totals.couponDiscount}` : '';
 
         orderMessage = `*New Naming Ceremony Cart Order*\n\n` +
                        `*Selected Items:*\n${itemsList}\n\n` +
                        `*Subtotal:* ₹${totals.subtotal}` +
-                       `${discountInfo}\n` +
-                       `*Total Amount:* ₹${totals.finalTotal}\n\n` +
+                       `${comboInfo}` +
+                       `${couponInfo}\n` +
+                       `*Total Amount Payable:* ₹${totals.finalTotal}\n\n` +
                        `*--- Ceremony Details ---*\n` +
                        `*Mother's Name:* ${motherName}\n` +
                        `*Father's Name:* ${fatherName}\n` +
@@ -525,10 +723,12 @@ if (document.readyState === 'loading') {
     updateControls();
     renderItems();
     updateCartUI();
+    startSocialProofTicker();
   });
 } else {
   initNamingForm();
   updateControls();
   renderItems();
   updateCartUI();
+  startSocialProofTicker();
 }
