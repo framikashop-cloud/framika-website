@@ -1,22 +1,163 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Marcellus&family=Playfair+Display:ital,wght@0,500;0,700;0,800;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
-body { font-family: 'Inter', sans-serif; background-color: #f9fafb; }
-.active-tab { background-color: #f59e0b; color: #fff; }
-.inactive-tab { background-color: #fff; color: #4b5563; border: 1px solid #d1d5db; }
-.card-hover:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgb(0 0 0 / 10%), 0 8px 10px -6px rgb(0 0 0 / 10%); }
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { background: #f1f1f1; }
-::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+:root {
+  --gold-primary: #D4AF37;
+  --gold-light: #F5D061;
+  --gold-dark: #A37F1E;
+  --maroon-deep: #4A0E17;
+  --maroon-rich: #6B1724;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: #FAF9F6;
+  color: #1F2937;
+  overflow-x: hidden;
+}
+
+.font-serif-luxury {
+  font-family: 'Playfair Display', serif;
+}
+
+.font-accent-marcellus {
+  font-family: 'Marcellus', serif;
+}
+
+/* Gold Gradient Effects */
+.gold-gradient-text {
+  background: linear-gradient(135deg, #B8860B 0%, #D4AF37 40%, #F5D061 70%, #996515 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-gradient-bg {
+  background: linear-gradient(135deg, #B8860B 0%, #D4AF37 50%, #E6CA65 100%);
+}
+
+.gold-shimmer-bg {
+  background: linear-gradient(90deg, #D4AF37 0%, #FDF0A6 50%, #D4AF37 100%);
+  background-size: 200% auto;
+  animation: shimmer 3s linear infinite;
+}
+
+@keyframes shimmer {
+  to {
+    background-position: 200% center;
+  }
+}
+
+/* Luxury Glassmorphism */
+.glass-card {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(212, 175, 55, 0.25);
+}
+
+.glass-dark {
+  background: rgba(31, 20, 24, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+/* Royal Navigation Tabs */
+.active-tab {
+  background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
+  color: #FFFFFF;
+  box-shadow: 0 4px 14px rgba(212, 175, 55, 0.4);
+}
+
+.inactive-tab {
+  background-color: #FFFFFF;
+  color: #4B5563;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.inactive-tab:hover {
+  background-color: #FFFDF5;
+  color: #B8860B;
+}
+
+/* Card Hover Elevation */
+.card-hover {
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-hover:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 35px -10px rgba(212, 175, 55, 0.25), 0 8px 15px -6px rgba(0, 0, 0, 0.08);
+  border-color: rgba(212, 175, 55, 0.6);
+}
+
+/* Phone Mockup Floating Effect */
+@keyframes floatPhone {
+  0%, 100% {
+    transform: translateY(0px) rotate(-1deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(1deg);
+  }
+}
+
+.animate-float-phone {
+  animation: floatPhone 6s ease-in-out infinite;
+}
+
+.phone-ambient-glow {
+  position: relative;
+}
+
+.phone-ambient-glow::before {
+  content: '';
+  position: absolute;
+  inset: -15px;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.35) 0%, rgba(245, 208, 97, 0.15) 50%, transparent 75%);
+  filter: blur(20px);
+  z-index: 0;
+  border-radius: 40px;
+}
+
+/* Play Ripple Animation */
+@keyframes pulseRipple {
+  0% {
+    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 16px rgba(212, 175, 55, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0);
+  }
+}
+
+.play-button-ripple {
+  animation: pulseRipple 2s infinite;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #FAF9F6;
+}
+::-webkit-scrollbar-thumb {
+  background: #D4AF37;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #B8860B;
+}
 
 /* Toast Notification Animation */
 @keyframes slideUpFade {
   from {
-    transform: translate(-50%, 20px);
+    transform: translateY(20px);
     opacity: 0;
   }
   to {
-    transform: translate(-50%, 0);
+    transform: translateY(0);
     opacity: 1;
   }
 }
@@ -34,4 +175,3 @@ body { font-family: 'Inter', sans-serif; background-color: #f9fafb; }
 .badge-bounce {
   animation: cartBounce 0.4s ease-in-out;
 }
-

@@ -1,5 +1,5 @@
-/* Page behaviour & Cart Management with Combo Pricing Logic, Coupons, Sharing & Social Proof. Product details live in products.js. */
-const WHATSAPP_NUMBER = '919431817472';
+/* Page behaviour & Cart Management with Combo Pricing Logic, Coupons, Sharing & Social Proof. Store options managed in config.js. */
+const WHATSAPP_NUMBER = (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.whatsappNumber) ? SITE_CONFIG.whatsappNumber : '919431817472';
 let currentTab = 'video';
 let currentFilter = 'all';
 
@@ -7,23 +7,18 @@ let currentFilter = 'all';
 let cart = JSON.parse(localStorage.getItem('framika_cart') || '[]');
 let activeCoupon = JSON.parse(localStorage.getItem('framika_coupon') || 'null');
 
-// Available Promo Codes Database
-const PROMO_CODES = {
+// Available Promo Codes Database from config.js
+const PROMO_CODES = (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.promoCodes) ? SITE_CONFIG.promoCodes : {
   'FIRST50': { type: 'fixed', value: 50, label: '₹50 OFF (Welcome Offer)' },
   'FRAMIKA10': { type: 'percent', value: 10, label: '10% OFF' },
   'SPECIAL30': { type: 'fixed', value: 30, label: '₹30 OFF' },
   'COMBO299': { type: 'fixed', value: 25, label: '₹25 Extra Combo Bonus' }
 };
 
-// Social Proof Events Database
-const SOCIAL_PROOF_EVENTS = [
+// Social Proof Events Database from config.js
+const SOCIAL_PROOF_EVENTS = (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.socialProofEvents) ? SITE_CONFIG.socialProofEvents : [
   { name: 'Sneta P.', city: 'Pune', item: 'NM-MR-B-01', type: 'ordered', time: '4 mins ago' },
-  { name: 'Rahul M.', city: 'Nashik', item: 'Card 2', type: 'added', time: '2 mins ago' },
-  { name: 'Priya S.', city: 'Mumbai', item: 'NM-MR-G-02', type: 'ordered', time: '10 mins ago' },
-  { name: 'Vikram K.', city: 'Nagpur', item: 'Card 7', type: 'added', time: 'Just now' },
-  { name: 'Anjali D.', city: 'Thane', item: 'NM-MR-TG-01', type: 'ordered', time: '7 mins ago' },
-  { name: 'Sanjay R.', city: 'Kolhapur', item: 'Card 3', type: 'added', time: '14 mins ago' },
-  { name: 'Amol B.', city: 'PCMC', item: 'NM-MR-B-05', type: 'ordered', time: '3 mins ago' }
+  { name: 'Rahul M.', city: 'Nashik', item: 'Card 2', type: 'added', time: '2 mins ago' }
 ];
 
 const escapeHtml = (value) => String(value).replace(/[&<>'"]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[character]));
@@ -401,8 +396,8 @@ function closeOrderForm() {
 
 function createProductCard(product, type) {
   const highlighted = product.badge || product.isCombo;
-  const background = product.badge === 'BEST VALUE' ? 'bg-amber-50 border-2 border-amber-400' : highlighted ? 'bg-amber-50 border-2 border-amber-300' : 'bg-white border border-gray-100';
-  const badge = product.badge ? `<div class="absolute top-0 right-0 bg-amber-500 text-white font-bold py-1 px-2 sm:px-3 rounded-bl-lg z-30 text-[10px] sm:text-xs shadow-md uppercase tracking-wider">${escapeHtml(product.badge)}</div>` : '';
+  const background = product.badge === 'BEST VALUE' ? 'bg-amber-500/10 border-2 border-amber-400' : highlighted ? 'bg-amber-500/5 border-2 border-amber-300/80' : 'bg-white/90 border border-amber-900/10';
+  const badge = product.badge ? `<div class="absolute top-0 right-0 gold-gradient-bg text-white font-extrabold py-1 px-2.5 sm:px-3.5 rounded-bl-xl z-30 text-[10px] sm:text-xs shadow-md uppercase tracking-wider">${escapeHtml(product.badge)}</div>` : '';
   const ratio = type === 'video' ? 'aspect-[9/16]' : 'aspect-[3/4]';
   const safeTitle = escapeHtml(product.title);
   const safeDescription = escapeHtml(product.description);
@@ -410,43 +405,50 @@ function createProductCard(product, type) {
   const oldP = Number(product.oldPrice);
   const newP = Number(product.newPrice);
   const discountPercent = (oldP && newP && oldP > newP) ? Math.round(((oldP - newP) / oldP) * 100) : 0;
-  const discountBadge = discountPercent > 0 ? `<span class="ml-1.5 sm:ml-2 bg-red-500 text-white font-extrabold text-[10px] sm:text-xs px-2 py-0.5 rounded-md shadow-sm uppercase tracking-wide">${discountPercent}% OFF</span>` : '';
+  const discountBadge = discountPercent > 0 ? `<span class="ml-1.5 sm:ml-2 bg-gradient-to-r from-red-600 to-amber-600 text-white font-extrabold text-[10px] sm:text-xs px-2 py-0.5 rounded-md shadow-xs uppercase tracking-wide">${discountPercent}% OFF</span>` : '';
 
   // Quick Share Button on Media Thumbnail
-  const shareButtonHtml = `<button type="button" class="share-button absolute top-2 left-2 bg-white/90 hover:bg-white text-gray-700 hover:text-amber-600 rounded-full w-8 h-8 flex items-center justify-center shadow-md transition z-30 cursor-pointer" data-item-title="${safeTitle}" data-item-url="${escapeHtml(product.directVideoUrl || product.image)}" aria-label="Share ${safeTitle}">
+  const shareButtonHtml = `<button type="button" class="share-button absolute top-2 left-2 bg-white/90 hover:bg-white text-gray-800 hover:text-amber-700 rounded-full w-8 h-8 flex items-center justify-center shadow-md transition z-30 cursor-pointer" data-item-title="${safeTitle}" data-item-url="${escapeHtml(product.directVideoUrl || product.image)}" aria-label="Share ${safeTitle}">
     <i class="fa-solid fa-share-nodes text-xs sm:text-sm"></i>
   </button>`;
 
   const media = type === 'video'
-    ? `<div class="media-container relative w-full ${ratio} bg-gray-200 overflow-hidden flex-shrink-0">
+    ? `<div class="media-container relative w-full ${ratio} bg-gray-900 overflow-hidden flex-shrink-0">
          ${shareButtonHtml}
-         <button type="button" class="video-preview absolute inset-0 w-full h-full group overflow-hidden cursor-pointer block" data-video-url="${escapeHtml(product.directVideoUrl)}" aria-label="Play ${safeTitle}">
-           <img src="${escapeHtml(product.thumbnailImage)}" alt="Marathi Baby ${product.gender === 'boy' ? 'Boy' : 'Girl'} Naamkaran Video Invitation Design ${safeTitle}" class="absolute inset-0 w-full h-full object-cover z-10 transition-opacity duration-300">
-           <span class="play-overlay absolute inset-0 flex items-center justify-center bg-black bg-opacity-20 group-hover:bg-opacity-10 transition z-20"><span class="w-10 h-10 sm:w-14 sm:h-14 bg-amber-500 rounded-full flex items-center justify-center shadow-lg text-white text-xl">&#9654;</span></span>
+         <button type="button" class="video-preview absolute inset-0 w-full h-full group overflow-hidden cursor-pointer block" data-video-url="${escapeHtml(product.directVideoUrl)}" data-video-title="${safeTitle}" aria-label="Play ${safeTitle}">
+           <img src="${escapeHtml(product.thumbnailImage)}" alt="Marathi Baby ${product.gender === 'boy' ? 'Boy' : 'Girl'} Naamkaran Video Invitation Design ${safeTitle}" class="absolute inset-0 w-full h-full object-cover z-10 transition-transform duration-500 group-hover:scale-105">
+           <span class="play-overlay absolute inset-0 flex flex-col items-center justify-center bg-black/30 group-hover:bg-black/20 transition z-20">
+             <span class="w-12 h-12 sm:w-14 sm:h-14 gold-gradient-bg rounded-full flex items-center justify-center shadow-2xl text-white text-xl play-button-ripple mb-1">
+               <i class="fa-solid fa-play ml-0.5"></i>
+             </span>
+             <span class="text-[10px] sm:text-xs font-bold text-amber-200 bg-black/60 px-2.5 py-0.5 rounded-full border border-amber-400/30">Preview Video</span>
+           </span>
          </button>
        </div>`
-    : `<div class="media-container relative w-full ${ratio} bg-gray-200 overflow-hidden flex-shrink-0">
+    : `<div class="media-container relative w-full ${ratio} bg-gray-100 overflow-hidden flex-shrink-0">
          ${shareButtonHtml}
          <button type="button" class="image-preview absolute inset-0 w-full h-full cursor-pointer group overflow-hidden block" data-image-url="${escapeHtml(product.image)}" data-image-title="${safeTitle}" aria-label="Open ${safeTitle} preview">
            <img src="${escapeHtml(product.image)}" alt="Marathi Naming Ceremony Digital Invitation Card Design ${safeTitle}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-           <span class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 flex items-center justify-center"><span class="bg-black bg-opacity-60 text-white rounded-full px-3 py-2 opacity-0 group-hover:opacity-100 transition-all">View</span></span>
+           <span class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
+             <span class="bg-black/70 text-amber-200 text-xs font-bold rounded-full px-3 py-1.5 opacity-0 group-hover:opacity-100 transition-all border border-amber-400/40">View Card</span>
+           </span>
          </button>
        </div>`;
 
-  return `<article class="${background} rounded-2xl shadow-md overflow-hidden card-hover flex flex-col relative">
+  return `<article class="${background} rounded-2xl shadow-xs overflow-hidden card-hover flex flex-col relative">
     ${badge}${media}
-    <div class="p-3 sm:p-5 flex flex-col flex-grow">
-      <h3 class="text-sm sm:text-lg font-bold text-gray-900 mb-1 leading-tight">${safeTitle}</h3>
+    <div class="p-3.5 sm:p-5 flex flex-col flex-grow">
+      <h3 class="font-serif-luxury text-sm sm:text-lg font-bold text-gray-900 mb-1 leading-tight">${safeTitle}</h3>
       <p class="text-xs sm:text-sm text-gray-600 mb-2 sm:mb-4 flex-grow line-clamp-2">${safeDescription}</p>
-      <div class="mb-3 sm:mb-4 flex items-center flex-wrap gap-1"><span class="text-gray-400 line-through text-xs sm:text-sm mr-1">&#8377;${escapeHtml(product.oldPrice)}</span><span class="text-base sm:text-2xl font-bold text-green-600">&#8377;${escapeHtml(product.newPrice)}</span>${discountBadge}</div>
+      <div class="mb-3 sm:mb-4 flex items-center flex-wrap gap-1"><span class="text-gray-400 line-through text-xs sm:text-sm mr-1">&#8377;${escapeHtml(product.oldPrice)}</span><span class="text-base sm:text-2xl font-extrabold text-amber-800">&#8377;${escapeHtml(product.newPrice)}</span>${discountBadge}</div>
       
       <!-- Dual Buttons: Add to Cart & Direct WhatsApp Order -->
       <div class="flex flex-col sm:flex-row gap-2 mt-auto">
-        <button type="button" class="add-cart-button flex-1 bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 sm:py-2.5 px-2 rounded-xl transition shadow-sm flex items-center justify-center gap-1.5 text-xs sm:text-sm cursor-pointer" data-item-name="${safeTitle}">
+        <button type="button" class="add-cart-button flex-1 gold-gradient-bg hover:brightness-105 text-white font-bold py-2 sm:py-2.5 px-2 rounded-xl transition shadow-xs flex items-center justify-center gap-1.5 text-xs sm:text-sm cursor-pointer" data-item-name="${safeTitle}">
           <i class="fa-solid fa-cart-plus"></i>
           <span>Add to Cart</span>
         </button>
-        <button type="button" class="order-button flex-1 bg-[#25D366] hover:bg-[#1ebd5b] text-white font-bold py-2 sm:py-2.5 px-2 rounded-xl transition shadow-sm flex items-center justify-center gap-1.5 text-xs sm:text-sm cursor-pointer" data-item-name="${safeName}">
+        <button type="button" class="order-button flex-1 bg-[#25D366] hover:bg-[#1ebd5b] text-white font-bold py-2 sm:py-2.5 px-2 rounded-xl transition shadow-xs flex items-center justify-center gap-1.5 text-xs sm:text-sm cursor-pointer" data-item-name="${safeName}">
           <i class="fa-brands fa-whatsapp"></i>
           <span>Order Now</span>
         </button>
@@ -620,7 +622,7 @@ document.addEventListener('click', (event) => {
 
   if (videoButton) {
     document.querySelectorAll('video').forEach((video) => video.pause());
-    const container = videoButton.closest('.media-container') || videoButton.parentElement;
+    const container = videoButton.closest('.media-container') || videoButton.closest('.aspect-\\[9\\/16\\]') || videoButton.parentElement;
     const video = document.createElement('video');
     video.src = videoButton.dataset.videoUrl;
     video.controls = true;
