@@ -263,7 +263,7 @@ const SITE_CONFIG = {
       badge: 'NEW',
       gender: 'both',
       type: 'card'
-    }
+    },
     {
       title: 'Card 10',
       description: 'Beautiful single-page digital invitation card for baby naming ceremony.',
