@@ -50,11 +50,13 @@ function calculateCartTotals() {
   });
 
   // Combo Offer Pricing Logic:
-  // Video standard price: ₹299, Card standard price: ₹149 (Total = ₹448).
-  // Combo pair (1 Video + 1 Card) = ₹299 total!
-  // Combo discount per pair = ₹448 - ₹299 = ₹149 off.
+  // Dynamically configured from SITE_CONFIG.comboOffer (default ₹349 bundle price)
+  const comboTargetPrice = (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.comboOffer && SITE_CONFIG.comboOffer.comboPrice) ? Number(SITE_CONFIG.comboOffer.comboPrice) : 349;
+  const stdVideoPrice = (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.comboOffer && SITE_CONFIG.comboOffer.standardVideoPrice) ? Number(SITE_CONFIG.comboOffer.standardVideoPrice) : 299;
+  const stdCardPrice = (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.comboOffer && SITE_CONFIG.comboOffer.standardCardPrice) ? Number(SITE_CONFIG.comboOffer.standardCardPrice) : 149;
+
   const numCombos = Math.min(numVideos, numCards);
-  const discountPerCombo = 149;
+  const discountPerCombo = Math.max(0, (stdVideoPrice + stdCardPrice) - comboTargetPrice);
   const comboDiscount = numCombos * discountPerCombo;
   const afterCombo = Math.max(0, subtotal - comboDiscount);
 
@@ -256,13 +258,14 @@ function updateCartUI() {
 
   // Render Combo Banner
   if (comboBanner) {
+    const targetBundlePrice = (typeof SITE_CONFIG !== 'undefined' && SITE_CONFIG.comboOffer && SITE_CONFIG.comboOffer.comboPrice) ? SITE_CONFIG.comboOffer.comboPrice : 349;
     if (totals.numCombos > 0) {
       comboBanner.innerHTML = `
         <div class="flex items-center gap-2 text-green-800 text-xs sm:text-sm font-semibold">
           <span class="text-xl">🎉</span>
           <div>
             <span>Combo Offer Applied! (${totals.numCombos} Combo Pair${totals.numCombos > 1 ? 's' : ''})</span>
-            <p class="text-[11px] text-green-700 font-normal">Card + Video bundle price applied at <strong>₹299</strong> (Saved ₹${totals.comboDiscount})!</p>
+            <p class="text-[11px] text-green-700 font-normal">Card + Video bundle price applied at <strong>₹${targetBundlePrice}</strong> (Saved ₹${totals.comboDiscount})!</p>
           </div>
         </div>`;
     } else if (totals.numVideos > 0 && totals.numCards === 0) {
@@ -271,7 +274,7 @@ function updateCartUI() {
           <span class="text-xl">💡</span>
           <div>
             <span class="font-bold">Add any Digital Card to get the Combo Offer!</span>
-            <p class="text-[11px] text-amber-800">Get 1 Video + 1 Card together for just <span class="font-bold underline">₹299</span> total!</p>
+            <p class="text-[11px] text-amber-800">Get 1 Video + 1 Card together for just <span class="font-bold underline">₹${targetBundlePrice}</span> total!</p>
           </div>
         </div>`;
     } else if (totals.numCards > 0 && totals.numVideos === 0) {
@@ -280,13 +283,13 @@ function updateCartUI() {
           <span class="text-xl">💡</span>
           <div>
             <span class="font-bold">Add any Video Invitation to get the Combo Offer!</span>
-            <p class="text-[11px] text-amber-800">Get 1 Card + 1 Video together for just <span class="font-bold underline">₹299</span> total!</p>
+            <p class="text-[11px] text-amber-800">Get 1 Card + 1 Video together for just <span class="font-bold underline">₹${targetBundlePrice}</span> total!</p>
           </div>
         </div>`;
     } else {
       comboBanner.innerHTML = `
         <div class="text-center text-xs text-amber-900 font-medium">
-          🎁 <span class="font-bold">Special Combo Offer:</span> Add 1 Card + 1 Video for just <span class="font-bold underline">₹299</span>!
+          🎁 <span class="font-bold">Special Combo Offer:</span> Add 1 Card + 1 Video for just <span class="font-bold underline">₹${targetBundlePrice}</span>!
         </div>`;
     }
   }

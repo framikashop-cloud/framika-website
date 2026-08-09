@@ -1,14 +1,50 @@
 # 🛠️ Framika Invites - Easy Content & Store Management Guide
 
-All website content, discount coupons, products, photos, videos, prices, and live ticker notifications can now be managed easily from **ONE single file**:
+All website content, discount coupons, products, photos, videos, prices, and live ticker notifications can be managed easily from **ONE single file**:
 
-📌 **File Path:** [`config.js`](file:///D:/antigravity/my%20site/config.js)
+📌 **File Path:** [`config.js`](file:///C:/Users/moluk/OneDrive/Documents/GitHub/framika-website/config.js)
+
+---
+
+## ⚠️ CRITICAL RULE: Don't Forget the Comma `,`
+
+When adding items inside lists (arrays or objects), **every item except the last item MUST end with a comma `,`**.
+
+### ❌ WRONG (Will break the site):
+```javascript
+    {
+      title: 'Card 9',
+      type: 'card'
+    } // ❌ Missing comma here!
+    {
+      title: 'Card 10',
+      type: 'card'
+    }
+  ] // ❌ Missing comma here before socialProofEvents!
+
+  socialProofEvents: [ ... ]
+```
+
+### ✅ CORRECT:
+```javascript
+    {
+      title: 'Card 9',
+      type: 'card'
+    }, // ✅ Notice the comma at the end of the curly brace!
+    {
+      title: 'Card 10',
+      type: 'card'
+    }
+  ], // ✅ Notice the comma at the end of the array!
+
+  socialProofEvents: [ ... ]
+```
 
 ---
 
 ## 🎟️ 1. How to Add or Change Coupon Codes
 
-Open [`config.js`](file:///D:/antigravity/my%20site/config.js) and look for `promoCodes`:
+Open [`config.js`](file:///C:/Users/moluk/OneDrive/Documents/GitHub/framika-website/config.js) and look for `promoCodes`:
 
 ```javascript
 promoCodes: {
@@ -24,7 +60,7 @@ promoCodes: {
 
 ## 📹 2. How to Add a New Video Invitation
 
-To add a new video to your website, copy and paste this template inside the `videos: [ ... ]` list in [`config.js`](file:///D:/antigravity/my%20site/config.js):
+To add a new video to your website, copy and paste this template inside the `videos: [ ... ]` list in [`config.js`](file:///C:/Users/moluk/OneDrive/Documents/GitHub/framika-website/config.js):
 
 ```javascript
 {
@@ -45,16 +81,16 @@ To add a new video to your website, copy and paste this template inside the `vid
 
 ## 🖼️ 3. How to Add a New Digital Card / Photo
 
-To add a new single-page digital invitation card or photo, copy and paste this template inside the `cards: [ ... ]` list in [`config.js`](file:///D:/antigravity/my%20site/config.js):
+To add a new single-page digital invitation card or photo, copy and paste this template inside the `cards: [ ... ]` list in [`config.js`](file:///C:/Users/moluk/OneDrive/Documents/GitHub/framika-website/config.js):
 
 ```javascript
 {
-  title: 'Card 10',
+  title: 'Card 11',
   description: 'Festive traditional Marathi naming ceremony digital invitation card.',
   oldPrice: '199',
   newPrice: '149',
   image: 'https://your-server.com/path-to-card-image.png',
-  whatsappName: 'Card 10',
+  whatsappName: 'Card 11',
   badge: 'NEW', // Options: 'NEW', 'POPULAR', or ''
   gender: 'girl', // Options: 'boy', 'girl', or 'both'
   type: 'card'
@@ -65,13 +101,13 @@ To add a new single-page digital invitation card or photo, copy and paste this t
 
 ## 🗑️ 4. How to Delete a Video or Card
 
-Simply open [`config.js`](file:///D:/antigravity/my%20site/config.js) and delete the object block `{ ... }` corresponding to the video or card you wish to remove.
+Simply open [`config.js`](file:///C:/Users/moluk/OneDrive/Documents/GitHub/framika-website/config.js) and delete the object block `{ ... }` corresponding to the video or card you wish to remove.
 
 ---
 
 ## 🔔 5. How to Edit Social Proof Ticker Notifications
 
-Look for `socialProofEvents` in [`config.js`](file:///D:/antigravity/my%20site/config.js):
+Look for `socialProofEvents` in [`config.js`](file:///C:/Users/moluk/OneDrive/Documents/GitHub/framika-website/config.js):
 
 ```javascript
 socialProofEvents: [
@@ -85,7 +121,7 @@ Add or change customer names, cities, items, or times to customize live order po
 
 ## 📲 6. How to Change Your WhatsApp Number
 
-In [`config.js`](file:///D:/antigravity/my%20site/config.js), change:
+In [`config.js`](file:///C:/Users/moluk/OneDrive/Documents/GitHub/framika-website/config.js), change:
 ```javascript
 whatsappNumber: '919431817472', // Enter your 12-digit number with country code (e.g. 91...)
 ```
