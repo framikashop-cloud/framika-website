@@ -264,6 +264,17 @@ const SITE_CONFIG = {
       gender: 'both',
       type: 'card'
     }
+    {
+      title: 'Card 10',
+      description: 'Beautiful single-page digital invitation card for baby naming ceremony.',
+      oldPrice: '199',
+      newPrice: '149',
+      image: 'https://res.cloudinary.com/hic9igq3/image/upload/v1786284022/card_10_moysdo.png',
+      whatsappName: 'Card 10',
+      badge: 'NEW',
+      gender: 'both',
+      type: 'card'
+    }
   ],
 
 
