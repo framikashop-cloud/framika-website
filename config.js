@@ -35,7 +35,7 @@ const SITE_CONFIG = {
   // ------------------------------------------------------------------------
   comboOffer: {
     enabled: true,
-    comboPrice: 299, // Total bundle price when 1 Video + 1 Card are in cart
+    comboPrice: 349, // Total bundle price when 1 Video + 1 Card are in cart
     standardVideoPrice: 299,
     standardCardPrice: 149
   },
