@@ -181,7 +181,7 @@ const SITE_CONFIG = {
       description: 'Traditional Marathi welcome and Naamkaran digital card design.',
       oldPrice: '199',
       newPrice: '149',
-      image: 'https://res.cloudinary.com/hic9igq3/image/upload/v1783788273/%E0%A4%B8%E0%A5%8D%E0%A4%B2%E0%A4%BE%E0%A4%97%E0%A4%A4%E0%A4%B8%E0%A5%8B%E0%A4%A4%E0%A5%8D%E0%A4%AF%E0%A5%81%E0%A4%95_%E0%A4%B6%E0%A5%8D%E0%A4%B0%E0%A5%80._%E0%A4%B9%E0%A4%B0%E0%A5%80%E0%A4%B6_%E0%A4%9A%E0%A4%82%E0%A4%A6%E0%A5%8D%E0%A4%B0_%E0%A4%A8%E0%A4%BE%E0%A4%B0%E0%A4%BE%E0%A4%AF%E0%A4%A3_%E0%A4%AA%E0%A4%B5%E0%A4%BE%E0%A4%B0_%E0%A4%B6%E0%A5%8D%E0%A4%B0%E0%A5%80._%E0%A4%AC%E0%A4%AC%E0%A4%BF%E0%A4%A4%E0%A4%BE_%E0%A4%A8%E0%A4%BE%E0%A4%B0%E0%A4%BE%E0%A4%AF%E0%A4%A3_%E0%A4%AA%E0%A4%B5%E0%A4%BE%E0%A4%B0_kaodud.png',
+      image: 'https://res.cloudinary.com/hic9igq3/image/upload/v1783788273/%E0%A4%B8%E0%A5%8D%E0%A4%B5%E0%A4%BE%E0%A4%97%E0%A4%A4%E0%A4%B8%E0%A5%8B%E0%A4%A4%E0%A5%8D%E0%A4%AF%E0%A5%81%E0%A4%95_%E0%A4%B6%E0%A5%8D%E0%A4%B0%E0%A5%80._%E0%A4%B9%E0%A4%B0%E0%A5%80%E0%A4%B6_%E0%A4%9A%E0%A4%82%E0%A4%A6%E0%A5%8D%E0%A4%B0_%E0%A4%A8%E0%A4%BE%E0%A4%B0%E0%A4%BE%E0%A4%AF%E0%A4%A3_%E0%A4%AA%E0%A4%B5%E0%A4%BE%E0%A4%B0_%E0%A4%B6%E0%A5%8D%E0%A4%B0%E0%A5%80._%E0%A4%AC%E0%A4%AC%E0%A4%BF%E0%A4%A4%E0%A4%BE_%E0%A4%A8%E0%A4%BE%E0%A4%B0%E0%A4%BE%E0%A4%AF%E0%A4%A3_%E0%A4%AA%E0%A4%B5%E0%A4%BE%E0%A4%B0_kaodud.png',
       whatsappName: 'Card 2',
       badge: '',
       gender: 'boy',
@@ -275,7 +275,7 @@ const SITE_CONFIG = {
       gender: 'both',
       type: 'card'
     }
-  ],
+  ]
 
 
   // ------------------------------------------------------------------------
