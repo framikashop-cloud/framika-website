@@ -179,9 +179,9 @@ src="https://www.facebook.com/tr?id=1313083764233241&ev=PageView&noscript=1"
         </div>
         <div>
           <h1 class="font-serif-luxury text-xl sm:text-2xl font-bold text-gray-900 tracking-tight leading-none flex items-center gap-1.5">
-            Framika <span class="gold-gradient-text font-accent-marcellus">Invites</span>
+            Framika <span class="gold-gradient-text">Invites</span>
           </h1>
-          <span class="text-[10px] text-amber-800 tracking-widest uppercase font-semibold block">Naamkaran Digital Boutique</span>
+          <span class="text-xs text-amber-900 tracking-wider uppercase font-semibold block leading-tight">Naamkaran Digital Boutique</span>
         </div>
       </a>
 
@@ -209,7 +209,7 @@ src="https://www.facebook.com/tr?id=1313083764233241&ev=PageView&noscript=1"
     </div>
 
     <!-- Featured Combo & Coupon Banner -->
-    <div id="combo-banner" class="mb-12 max-w-4xl mx-auto bg-gradient-to-r from-[#4A0E17] via-[#6B1724] to-[#4A0E17] rounded-3xl p-5 sm:p-7 text-white shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-5 border border-amber-400/40 relative overflow-hidden text-left">
+    <div id="combo-banner" class="mb-12 max-w-4xl mx-auto bg-gradient-to-r from-[#4A0E17] via-[#6B1724] to-[#4A0E17] rounded-2xl p-5 sm:p-7 text-white shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-5 border border-amber-400/40 relative overflow-hidden text-left">
       <div class="absolute -right-8 -bottom-8 w-40 h-40 bg-amber-400/10 rounded-full blur-3xl pointer-events-none"></div>
 
       <div class="flex items-start gap-4 z-10">
@@ -217,7 +217,7 @@ src="https://www.facebook.com/tr?id=1313083764233241&ev=PageView&noscript=1"
           <i class="fa-solid fa-crown"></i>
         </div>
         <div>
-          <div class="inline-flex items-center gap-1.5 bg-amber-400/20 backdrop-blur-md px-3 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider text-amber-300 mb-1 border border-amber-400/30">
+          <div class="inline-flex items-center gap-1.5 bg-amber-400/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider text-amber-200 mb-1.5 border border-amber-400/40">
             <span>Special Value Bundle</span>
           </div>
           <h3 class="font-serif-luxury text-2xl sm:text-3xl font-extrabold tracking-tight text-white leading-tight">Card + Video Combo for ₹349</h3>
@@ -226,13 +226,16 @@ src="https://www.facebook.com/tr?id=1313083764233241&ev=PageView&noscript=1"
       </div>
 
       <div class="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto z-10">
-        <div class="bg-white/95 backdrop-blur-md text-gray-900 rounded-2xl p-3.5 text-center border border-amber-300/80 shadow-lg w-full sm:w-auto">
-          <span class="text-[10px] text-amber-900 font-extrabold uppercase block tracking-wider">Use Promo Code</span>
-          <div class="flex items-center justify-center gap-2 mt-1">
-            <span class="font-extrabold text-amber-700 text-lg tracking-widest font-mono">FIRST50</span>
-            <button type="button" class="copy-code-btn text-xs gold-gradient-bg hover:brightness-105 text-white font-bold px-3 py-1 rounded-lg transition shadow-xs" data-code="FIRST50">Copy</button>
+        <div class="bg-white/95 backdrop-blur-md text-gray-900 rounded-2xl p-4 text-center border border-amber-300/80 shadow-lg w-full sm:w-auto">
+          <span class="text-xs text-amber-900 font-extrabold uppercase block tracking-wider mb-1">Use Promo Code</span>
+          <div class="flex items-center justify-center gap-2">
+            <span class="font-bold text-amber-800 text-base tracking-wider bg-amber-50 px-3 py-1.5 rounded-xl border border-amber-200">FIRST50</span>
+            <button type="button" class="copy-code-btn min-h-[40px] px-4 py-2 text-xs sm:text-sm gold-gradient-bg hover:brightness-105 active:scale-95 text-white font-bold rounded-xl transition shadow-xs cursor-pointer flex items-center gap-1.5" data-code="FIRST50" aria-label="Copy coupon code FIRST50">
+              <i class="fa-regular fa-copy"></i>
+              <span>Copy</span>
+            </button>
           </div>
-          <span class="text-[10px] text-green-700 font-bold block mt-1"><i class="fa-solid fa-tag"></i> Extra ₹50 OFF in Cart!</span>
+          <span class="text-xs text-green-700 font-bold block mt-1.5"><i class="fa-solid fa-tag"></i> Extra ₹50 OFF in Cart!</span>
         </div>
       </div>
     </div>
@@ -253,9 +256,9 @@ src="https://www.facebook.com/tr?id=1313083764233241&ev=PageView&noscript=1"
 
     <!-- Filter Buttons -->
     <nav class="flex justify-center gap-2.5 mb-10 flex-wrap" aria-label="Filter designs">
-      <button type="button" data-filter="all" id="filter-all" class="px-4 py-1.5 rounded-full border-2 border-amber-400 bg-amber-50 font-bold text-xs sm:text-sm text-amber-900 transition shadow-xs cursor-pointer">All Designs</button>
-      <button type="button" data-filter="boy" id="filter-boy" class="px-4 py-1.5 rounded-full border border-gray-300 bg-white hover:bg-blue-50 font-semibold text-xs sm:text-sm text-gray-700 transition cursor-pointer">Baby Boy 👦</button>
-      <button type="button" data-filter="girl" id="filter-girl" class="px-4 py-1.5 rounded-full border border-gray-300 bg-white hover:bg-pink-50 font-semibold text-xs sm:text-sm text-gray-700 transition cursor-pointer">Baby Girl 👧</button>
+      <button type="button" data-filter="all" id="filter-all" class="px-4 py-2 rounded-full border-2 border-amber-500 bg-amber-50 font-bold text-xs sm:text-sm text-amber-900 transition shadow-xs cursor-pointer" aria-pressed="true">All Designs</button>
+      <button type="button" data-filter="boy" id="filter-boy" class="px-4 py-2 rounded-full border border-gray-300 bg-gray-50/80 hover:bg-blue-50 hover:border-blue-300 font-semibold text-xs sm:text-sm text-gray-700 transition cursor-pointer shadow-2xs" aria-pressed="false">Baby Boy 👦</button>
+      <button type="button" data-filter="girl" id="filter-girl" class="px-4 py-2 rounded-full border border-gray-300 bg-gray-50/80 hover:bg-pink-50 hover:border-pink-300 font-semibold text-xs sm:text-sm text-gray-700 transition cursor-pointer shadow-2xs" aria-pressed="false">Baby Girl 👧</button>
     </nav>
 
     <!-- Grids -->
@@ -298,27 +301,27 @@ src="https://www.facebook.com/tr?id=1313083764233241&ev=PageView&noscript=1"
 
       <div class="grid md:grid-cols-2 gap-6">
         <div class="bg-white p-6 rounded-2xl shadow-xs border border-amber-200/60 relative">
-          <span class="text-amber-300 font-serif text-5xl absolute top-2 right-4 pointer-events-none opacity-50">“</span>
+          <span class="text-amber-300 font-serif-luxury text-4xl absolute top-2 right-4 pointer-events-none opacity-50">“</span>
           <div class="text-amber-500 text-sm mb-2">⭐⭐⭐⭐⭐</div>
           <p class="text-gray-700 italic text-sm mb-4 leading-relaxed">"Very beautiful Marathi Naamkaran video invitation! The delivery was within 12 hours on WhatsApp. All our relatives loved the royal traditional music."</p>
           <div class="flex items-center gap-2.5">
             <div class="w-8 h-8 rounded-full gold-gradient-bg text-white font-bold flex items-center justify-center text-xs">S</div>
             <div>
-              <p class="font-bold text-gray-900 text-xs">Sneta P.</p>
-              <p class="text-[10px] text-amber-800 font-semibold">Pune • Verified Order</p>
+              <p class="font-bold text-gray-900 text-xs sm:text-sm">Sneta P.</p>
+              <p class="text-xs text-amber-900 font-medium">Pune • Verified Order</p>
             </div>
           </div>
         </div>
 
         <div class="bg-white p-6 rounded-2xl shadow-xs border border-amber-200/60 relative">
-          <span class="text-amber-300 font-serif text-5xl absolute top-2 right-4 pointer-events-none opacity-50">“</span>
+          <span class="text-amber-300 font-serif-luxury text-4xl absolute top-2 right-4 pointer-events-none opacity-50">“</span>
           <div class="text-amber-500 text-sm mb-2">⭐⭐⭐⭐⭐</div>
           <p class="text-gray-700 italic text-sm mb-4 leading-relaxed">"Top quality digital card for my baby boy's naming ceremony. Marathi text alignment was perfect and service was super fast!"</p>
           <div class="flex items-center gap-2.5">
             <div class="w-8 h-8 rounded-full gold-gradient-bg text-white font-bold flex items-center justify-center text-xs">R</div>
             <div>
-              <p class="font-bold text-gray-900 text-xs">Rahul M.</p>
-              <p class="text-[10px] text-amber-800 font-semibold">Nashik • Verified Order</p>
+              <p class="font-bold text-gray-900 text-xs sm:text-sm">Rahul M.</p>
+              <p class="text-xs text-amber-900 font-medium">Nashik • Verified Order</p>
             </div>
           </div>
         </div>
@@ -535,15 +538,6 @@ src="https://www.facebook.com/tr?id=1313083764233241&ev=PageView&noscript=1"
       </div>
     </div>
   </div>
-
-  <!-- Floating Sticky Cart Button -->
-  <button type="button" id="floating-cart-btn" class="fixed bottom-6 right-6 z-40 gold-gradient-bg hover:brightness-105 text-white p-4 rounded-full shadow-2xl transition flex items-center justify-center gap-2 cursor-pointer group hover:scale-105" aria-label="Open Cart">
-    <i class="fa-solid fa-bag-shopping text-xl"></i>
-    <span id="floating-cart-count" class="bg-white text-amber-900 font-extrabold text-xs px-2 py-0.5 rounded-full shadow-xs">0</span>
-  </button>
-
-  <!-- Live Order Social Proof Ticker Container -->
-  <div id="social-proof-container" class="fixed bottom-4 left-4 sm:bottom-6 sm:left-6 z-40 max-w-[calc(100vw-2rem)] sm:max-w-sm pointer-events-auto"></div>
 
   <!-- Toast Container -->
   <div id="toast-container" class="fixed bottom-20 left-1/2 -translate-x-1/2 z-[110] pointer-events-none flex flex-col items-center"></div>
