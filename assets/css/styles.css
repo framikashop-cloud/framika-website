@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,800;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,800;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Yatra+One&family=Noto+Sans+Devanagari:wght@400;500;600;700;800&display=swap');
 
 :root {
   --gold-primary: #D4AF37;
@@ -14,14 +14,22 @@
 }
 
 body {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background-color: #FAF9F6;
   color: #1F2937;
   overflow-x: hidden;
 }
 
 .font-serif-luxury {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+.font-marathi-festive {
+  font-family: 'Yatra One', 'Noto Sans Devanagari', cursive, sans-serif;
+}
+
+.font-devanagari {
+  font-family: 'Noto Sans Devanagari', 'Plus Jakarta Sans', sans-serif;
 }
 
 /* Button Design System */
@@ -140,49 +148,96 @@ body {
   border-color: rgba(212, 175, 55, 0.6);
 }
 
-/* Phone Mockup Floating Effect */
-@keyframes floatPhone {
-  0%, 100% {
-    transform: translateY(0px) rotate(-1deg);
-  }
-  50% {
-    transform: translateY(-10px) rotate(1deg);
-  }
+/* Floating WhatsApp Quick Action Button */
+.floating-whatsapp {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+  color: #FFFFFF;
+  padding: 12px 18px;
+  border-radius: 9999px;
+  box-shadow: 0 8px 25px rgba(37, 211, 102, 0.45);
+  font-weight: 700;
+  font-size: 0.875rem;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  text-decoration: none;
 }
 
-.animate-float-phone {
-  animation: floatPhone 6s ease-in-out infinite;
+.floating-whatsapp:hover {
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 12px 30px rgba(37, 211, 102, 0.6);
 }
 
-.phone-ambient-glow {
-  position: relative;
-}
-
-.phone-ambient-glow::before {
-  content: '';
+.whatsapp-pulse-ring {
   position: absolute;
-  inset: -15px;
-  background: radial-gradient(circle, rgba(212, 175, 55, 0.35) 0%, rgba(245, 208, 97, 0.15) 50%, transparent 75%);
-  filter: blur(20px);
-  z-index: 0;
-  border-radius: 40px;
+  inset: -4px;
+  border-radius: 9999px;
+  border: 2px solid #25D366;
+  animation: pulseWhatsapp 2.2s infinite;
+  pointer-events: none;
 }
 
-/* Play Ripple Animation */
-@keyframes pulseRipple {
+@keyframes pulseWhatsapp {
   0% {
-    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7);
+    transform: scale(0.95);
+    opacity: 0.9;
   }
   70% {
-    box-shadow: 0 0 0 16px rgba(212, 175, 55, 0);
+    transform: scale(1.18);
+    opacity: 0;
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0);
+    transform: scale(1.18);
+    opacity: 0;
   }
 }
 
-.play-button-ripple {
-  animation: pulseRipple 2s infinite;
+/* Wording Template Box Styles */
+.wording-box {
+  background: #FFFFFF;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.wording-box:hover {
+  border-color: rgba(212, 175, 55, 0.7);
+  box-shadow: 0 10px 25px -5px rgba(212, 175, 55, 0.15);
+}
+
+.wording-text {
+  font-family: 'Noto Sans Devanagari', 'Plus Jakarta Sans', sans-serif;
+  line-height: 1.7;
+  color: #374151;
+  white-space: pre-line;
+}
+
+/* City Pill Badge */
+.city-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: #FFFFFF;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+  padding: 0.4rem 0.85rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #78350F;
+  transition: all 0.2s ease;
+}
+
+.city-pill:hover {
+  background: #FEF3C7;
+  border-color: #D4AF37;
+  transform: translateY(-1px);
 }
 
 /* Custom Scrollbar */

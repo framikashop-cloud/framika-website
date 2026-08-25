@@ -1,4 +1,6 @@
+# Robots.txt for Framika Invites (https://framika.in)
 User-agent: *
 Allow: /
 
+# Sitemaps
 Sitemap: https://framika.in/sitemap.xml

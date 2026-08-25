@@ -409,7 +409,7 @@ function createProductCard(product, type) {
   const media = type === 'video'
     ? `<div class="media-container relative w-full ${ratio} bg-gray-900 overflow-hidden flex-shrink-0">
          <button type="button" class="video-preview absolute inset-0 w-full h-full group overflow-hidden cursor-pointer block" data-video-url="${escapeHtml(product.directVideoUrl)}" data-video-title="${safeTitle}" aria-label="Play ${safeTitle}">
-           <img src="${escapeHtml(product.thumbnailImage)}" alt="Marathi Baby ${product.gender === 'boy' ? 'Boy' : 'Girl'} Naamkaran Video Invitation Design ${safeTitle}" class="absolute inset-0 w-full h-full object-cover z-10 transition-transform duration-500 group-hover:scale-105">
+           <img src="${escapeHtml(product.thumbnailImage)}" alt="Marathi Baby ${product.gender === 'boy' ? 'Boy' : 'Girl'} Naamkaran Video Invitation Design ${safeTitle}" loading="lazy" decoding="async" class="absolute inset-0 w-full h-full object-cover z-10 transition-transform duration-500 group-hover:scale-105">
            <span class="play-overlay absolute inset-0 flex flex-col items-center justify-center bg-black/30 group-hover:bg-black/20 transition z-20">
              <span class="w-12 h-12 sm:w-14 sm:h-14 gold-gradient-bg rounded-full flex items-center justify-center shadow-2xl text-white text-xl play-button-ripple mb-1">
                <i class="fa-solid fa-play ml-0.5"></i>
@@ -420,7 +420,7 @@ function createProductCard(product, type) {
        </div>`
     : `<div class="media-container relative w-full ${ratio} bg-gray-100 overflow-hidden flex-shrink-0">
          <button type="button" class="image-preview absolute inset-0 w-full h-full cursor-pointer group overflow-hidden block" data-image-url="${escapeHtml(product.image)}" data-image-title="${safeTitle}" aria-label="Open ${safeTitle} preview">
-           <img src="${escapeHtml(product.image)}" alt="Marathi Naming Ceremony Digital Invitation Card Design ${safeTitle}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+           <img src="${escapeHtml(product.image)}" alt="Marathi Naming Ceremony Digital Invitation Card Design ${safeTitle}" loading="lazy" decoding="async" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
            <span class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
              <span class="bg-black/70 text-amber-200 text-xs font-bold rounded-full px-3 py-1.5 opacity-0 group-hover:opacity-100 transition-all border border-amber-400/40">View Card</span>
            </span>
@@ -469,7 +469,7 @@ function updateControls() {
   ['video', 'card'].forEach((tab) => {
     const tabEl = document.getElementById(`tab-${tab}`);
     if (tabEl) {
-      tabEl.className = `px-6 py-2.5 rounded-full font-bold text-xs sm:text-sm transition-all flex items-center gap-2 cursor-pointer ${tab === currentTab ? 'active-tab shadow' : 'inactive-tab'}`;
+      tabEl.className = `px-5 py-2 rounded-full font-bold text-xs sm:text-sm transition-all flex items-center gap-1.5 cursor-pointer ${tab === currentTab ? 'active-tab shadow' : 'inactive-tab'}`;
     }
   });
   ['all', 'boy', 'girl'].forEach((filter) => {
@@ -478,8 +478,8 @@ function updateControls() {
       const isActive = filter === currentFilter;
       button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
       button.className = isActive
-        ? 'px-4 py-2 rounded-full border-2 border-amber-500 bg-amber-50 font-bold text-xs sm:text-sm text-amber-900 transition shadow-xs cursor-pointer'
-        : 'px-4 py-2 rounded-full border border-gray-300 bg-gray-50/80 hover:bg-amber-50/50 hover:border-amber-300 font-semibold text-xs sm:text-sm text-gray-700 transition cursor-pointer shadow-2xs';
+        ? 'px-3.5 py-1.5 rounded-full border-2 border-amber-500 bg-amber-50 font-bold text-xs sm:text-sm text-amber-900 transition shadow-xs cursor-pointer'
+        : 'px-3.5 py-1.5 rounded-full border border-gray-300 bg-white hover:bg-amber-50/60 hover:border-amber-300 font-semibold text-xs sm:text-sm text-gray-700 transition cursor-pointer shadow-2xs';
     }
   });
 }
@@ -514,11 +514,27 @@ document.addEventListener('click', (event) => {
   const removeCouponBtn = event.target.closest('#remove-coupon-btn');
 
   const copyCodeBtn = event.target.closest('.copy-code-btn');
+  const copyWordingBtn = event.target.closest('.copy-wording-btn');
 
   const qtyBtn = event.target.closest('.cart-qty-btn');
   const removeBtn = event.target.closest('.cart-remove-btn');
   const clearBtn = event.target.closest('#clear-cart-btn');
   const checkoutBtn = event.target.closest('#cart-checkout-btn');
+
+  if (copyWordingBtn) {
+    const targetId = copyWordingBtn.dataset.target;
+    const textEl = document.getElementById(targetId);
+    if (textEl) {
+      const textToCopy = textEl.innerText.trim();
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(textToCopy).then(() => {
+          showToast('📋 <strong>मजकूर कॉपी केला! (Wording Copied)</strong> Paste & send to WhatsApp!');
+        }).catch(() => {
+          showToast('📋 Wording text ready to copy.');
+        });
+      }
+    }
+  }
 
   if (copyCodeBtn) {
     const code = copyCodeBtn.dataset.code || 'FIRST50';

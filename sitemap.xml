@@ -1,9 +1,154 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://framika.in/</loc>
-    <lastmod>2026-07-28</lastmod>
-    <changefreq>weekly</changefreq>
+    <lastmod>2026-08-25</lastmod>
+    <changefreq>daily</changefreq>
     <priority>1.0</priority>
+
+    <!-- Video 1: NM-MR-B-01 -->
+    <video:video>
+      <video:thumbnail_loc>https://res.cloudinary.com/hic9igq3/video/upload/v1783780067/%E0%A4%AE%E0%A4%B0%E0%A4%BE%E0%A4%A0%E0%A5%80/NM-MR-B-01_pcdvei.jpg</video:thumbnail_loc>
+      <video:title>Marathi Naamkaran Video Invitation Baby Boy NM-MR-B-01 | बारसं निमंत्रण पत्रिका</video:title>
+      <video:description>Traditional Marathi Naming Ceremony (नामकरण सोहळा) HD video invitation template for Baby Boy with shehnai music and fast 24h WhatsApp delivery.</video:description>
+      <video:content_loc>https://res.cloudinary.com/hic9igq3/video/upload/v1783780067/%E0%A4%AE%E0%A4%B0%E0%A4%BE%E0%A4%A0%E0%A5%80/NM-MR-B-01_pcdvei.mp4</video:content_loc>
+      <video:duration>35</video:duration>
+      <video:family_friendly>yes</video:family_friendly>
+      <video:live>no</video:live>
+    </video:video>
+
+    <!-- Video 2: NM-MR-B-05 -->
+    <video:video>
+      <video:thumbnail_loc>https://res.cloudinary.com/hic9igq3/video/upload/v1783780066/%E0%A4%AE%E0%A4%B0%E0%A4%BE%E0%A4%A0%E0%A5%80/NM-MR-B-05_r6gfyi.jpg</video:thumbnail_loc>
+      <video:title>Royal Marathi Naamkaran Video Invitation NM-MR-B-05 | Baby Boy Barse Video</video:title>
+      <video:description>Royal gold Marathi naming ceremony invitation video for baby boy on WhatsApp with traditional wording and devotional background music.</video:description>
+      <video:content_loc>https://res.cloudinary.com/hic9igq3/video/upload/v1783780066/%E0%A4%AE%E0%A4%B0%E0%A4%BE%E0%A4%A0%E0%A5%80/NM-MR-B-05_r6gfyi.mp4</video:content_loc>
+      <video:duration>30</video:duration>
+      <video:family_friendly>yes</video:family_friendly>
+    </video:video>
+
+    <!-- Video 3: NM-MR-B-02 -->
+    <video:video>
+      <video:thumbnail_loc>https://res.cloudinary.com/hic9igq3/video/upload/v1783780067/%E0%A4%AE%E0%A4%B0%E0%A4%BE%E0%A4%A0%E0%A5%80/NM-MR-B-02_rsoqxu.jpg</video:thumbnail_loc>
+      <video:title>Marathi Naming Ceremony Video Invite NM-MR-B-02 | Baby Boy Barse Card Video</video:title>
+      <video:description>Elegant baby boy Marathi Barse invitation video designed for WhatsApp sharing in HD 9:16 mobile status size.</video:description>
+      <video:content_loc>https://res.cloudinary.com/hic9igq3/video/upload/v1783780067/%E0%A4%AE%E0%A4%B0%E0%A4%BE%E0%A4%A0%E0%A5%80/NM-MR-B-02_rsoqxu.mp4</video:content_loc>
+      <video:duration>32</video:duration>
+      <video:family_friendly>yes</video:family_friendly>
+    </video:video>
+
+    <!-- Video 4: NM-MR-B-03 -->
+    <video:video>
+      <video:thumbnail_loc>https://res.cloudinary.com/hic9igq3/video/upload/v1783780066/%E0%A4%AE%E0%A4%B0%E0%A4%BE%E0%A4%A0%E0%A5%80/NM-MR-B-03_fsmppj.jpg</video:thumbnail_loc>
+      <video:title>Traditional Marathi Naamkaran Patrika Video NM-MR-B-03</video:title>
+      <video:description>Traditional Marathi invitation video for baby boy naming ceremony featuring Bal Gopal and Krishna motifs.</video:description>
+      <video:content_loc>https://res.cloudinary.com/hic9igq3/video/upload/v1783780066/%E0%A4%AE%E0%A4%B0%E0%A4%BE%E0%A4%A0%E0%A5%80/NM-MR-B-03_fsmppj.mp4</video:content_loc>
+      <video:duration>35</video:duration>
+      <video:family_friendly>yes</video:family_friendly>
+    </video:video>
+
+    <!-- Video 5: NM-MR-B-04 -->
+    <video:video>
+      <video:thumbnail_loc>https://res.cloudinary.com/hic9igq3/video/upload/v1783780066/%E0%A4%AE%E0%A4%B0%E0%A4%BE%E0%A4%A0%E0%A5%80/NM-MR-B-04_glbdnm.jpg</video:thumbnail_loc>
+      <video:title>Cradle Ceremony Video Invitation NM-MR-B-04 | पाळणा सोहळा निमंत्रण</video:title>
+      <video:description>Cradle ceremony and Naamkaran video invitation template in Marathi with customizable parents and venue details.</video:description>
+      <video:content_loc>https://res.cloudinary.com/hic9igq3/video/upload/v1783780066/%E0%A4%AE%E0%A4%B0%E0%A4%BE%E0%A4%A0%E0%A5%80/NM-MR-B-04_glbdnm.mp4</video:content_loc>
+      <video:duration>30</video:duration>
+      <video:family_friendly>yes</video:family_friendly>
+    </video:video>
+
+    <!-- Video 6: NM-MR-G-02 -->
+    <video:video>
+      <video:thumbnail_loc>https://res.cloudinary.com/hic9igq3/video/upload/v1783788299/NM-MR-G-02_neifnd.jpg</video:thumbnail_loc>
+      <video:title>Marathi Baby Girl Naamkaran Video Invitation NM-MR-G-02 | बारसं निमंत्रण पत्रिका</video:title>
+      <video:description>Cute pink floral Marathi naming ceremony invitation video for baby girl with sweet lullaby music and fast WhatsApp delivery.</video:description>
+      <video:content_loc>https://res.cloudinary.com/hic9igq3/video/upload/v1783788299/NM-MR-G-02_neifnd.mp4</video:content_loc>
+      <video:duration>35</video:duration>
+      <video:family_friendly>yes</video:family_friendly>
+    </video:video>
+
+    <!-- Video 7: NM-MR-G-01 -->
+    <video:video>
+      <video:thumbnail_loc>https://res.cloudinary.com/hic9igq3/video/upload/v1783788297/NM-MR-G-01_q2hkkg.jpg</video:thumbnail_loc>
+      <video:title>Baby Girl Marathi Naming Ceremony Video NM-MR-G-01</video:title>
+      <video:description>Beautiful baby girl Barse video invitation in Marathi with traditional floral graphics and gold typography.</video:description>
+      <video:content_loc>https://res.cloudinary.com/hic9igq3/video/upload/v1783788297/NM-MR-G-01_q2hkkg.mp4</video:content_loc>
+      <video:duration>30</video:duration>
+      <video:family_friendly>yes</video:family_friendly>
+    </video:video>
+
+    <!-- Video 8: NM-MR-TG-01 -->
+    <video:video>
+      <video:thumbnail_loc>https://res.cloudinary.com/hic9igq3/video/upload/v1783788299/NM-MR-TG-01_orkpe7.jpg</video:thumbnail_loc>
+      <video:title>Traditional Baby Girl Naming Video NM-MR-TG-01 | Marathi Barse Invite</video:title>
+      <video:description>Royal traditional Marathi Naamkaran video invitation for baby girl with Lakshmi motifs and family greetings.</video:description>
+      <video:content_loc>https://res.cloudinary.com/hic9igq3/video/upload/v1783788299/NM-MR-TG-01_orkpe7.mp4</video:content_loc>
+      <video:duration>32</video:duration>
+      <video:family_friendly>yes</video:family_friendly>
+    </video:video>
+
+    <!-- Video 9: NM-MR-BG-03 -->
+    <video:video>
+      <video:thumbnail_loc>https://res.cloudinary.com/hic9igq3/video/upload/v1785203477/NM-MR-BG-03_zbi8pu.jpg</video:thumbnail_loc>
+      <video:title>Modern Baby Girl Naamkaran Video Invitation NM-MR-BG-03</video:title>
+      <video:description>New modern Marathi naming ceremony invitation video for baby girl with animated typography and musical effects.</video:description>
+      <video:content_loc>https://res.cloudinary.com/hic9igq3/video/upload/v1785203477/NM-MR-BG-03_zbi8pu.mp4</video:content_loc>
+      <video:duration>30</video:duration>
+      <video:family_friendly>yes</video:family_friendly>
+    </video:video>
+
+    <!-- Images: Digital Cards &amp; Catalogues -->
+    <image:image>
+      <image:loc>https://res.cloudinary.com/hic9igq3/image/upload/v1783788274/card_2_at2ktb.png</image:loc>
+      <image:title>Marathi Naamkaran Digital Card 1 for Baby Boy</image:title>
+      <image:caption>Single-page digital Naamkaran invitation card with floral borders in Marathi.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/hic9igq3/image/upload/v1783788273/%E0%A4%B8%E0%A5%8D%E0%A4%B5%E0%A4%BE%E0%A4%97%E0%A4%A4%E0%A4%B8%E0%A5%8B%E0%A4%A4%E0%A5%8D%E0%A4%AF%E0%A5%81%E0%A4%95_%E0%A4%B6%E0%A5%8D%E0%A4%B0%E0%A5%80._%E0%A4%B9%E0%A4%B0%E0%A5%80%E0%A4%B6_%E0%A4%9A%E0%A4%82%E0%A4%A6%E0%A5%8D%E0%A4%B0_%E0%A4%A8%E0%A4%BE%E0%A4%B0%E0%A4%BE%E0%A4%AF%E0%A4%A3_%E0%A4%AA%E0%A4%B5%E0%A4%BE%E0%A4%B0_%E0%A4%B6%E0%A5%8D%E0%A4%B0%E0%A5%80._%E0%A4%AC%E0%A4%AC%E0%A4%BF%E0%A4%A4%E0%A4%BE_%E0%A4%A8%E0%A4%BE%E0%A4%B0%E0%A4%BE%E0%A4%AF%E0%A4%A3_%E0%A4%AA%E0%A4%B5%E0%A4%BE%E0%A4%B0_kaodud.png</image:loc>
+      <image:title>Traditional Marathi Welcome and Naamkaran Digital Card 2</image:title>
+      <image:caption>Traditional Devanagari Marathi baby naming ceremony invitation card for WhatsApp.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/hic9igq3/image/upload/v1783788273/card_4_zonw8v.jpg</image:loc>
+      <image:title>Pink Themed Baby Girl Naming Ceremony Card 3</image:title>
+      <image:caption>Lovely baby girl Barse digital card in pink floral style.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/hic9igq3/image/upload/v1783788275/card_3_jckabn.png</image:loc>
+      <image:title>Royal Blue Gold Baby Boy Naming Ceremony Card 4</image:title>
+      <image:caption>Classic royal blue digital card with gold accents for baby boy.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/hic9igq3/image/upload/v1783788273/card_1_jyfhix.png</image:loc>
+      <image:title>Pastel Digital Card 5 for Baby Girl Barse</image:title>
+      <image:caption>Festive pastel digital invitation card for baby girl naming ceremony.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/hic9igq3/image/upload/v1784266023/Untitled_design_19_zpjxye.png</image:loc>
+      <image:title>Floral Baby Naming Ceremony Card 6</image:title>
+      <image:caption>Modern floral baby naming ceremony card for WhatsApp.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/hic9igq3/image/upload/v1785201709/card_7_z8ite0.png</image:loc>
+      <image:title>Traditional Motifs Naamkaran Card 7</image:title>
+      <image:caption>Premium digital Naamkaran invitation card with elegant traditional motifs.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/hic9igq3/image/upload/v1785201710/card_8_jytfjd.jpg</image:loc>
+      <image:title>Elegant Marathi Baby Girl Card 8</image:title>
+      <image:caption>Elegant Marathi baby naming ceremony digital card for WhatsApp.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/hic9igq3/image/upload/v1785201711/Card_9_tw2i1y.png</image:loc>
+      <image:title>Digital Naamkaran Invitation Card 9</image:title>
+      <image:caption>Single-page digital invitation card for baby naming ceremony.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://res.cloudinary.com/hic9igq3/image/upload/v1786284022/card_10_moysdo.png</image:loc>
+      <image:title>Digital Naming Ceremony Card 10</image:title>
+      <image:caption>Modern single-page digital card for baby naming ceremony.</image:caption>
+    </image:image>
   </url>
 </urlset>
